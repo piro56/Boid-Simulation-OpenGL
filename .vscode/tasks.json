@@ -24,7 +24,7 @@
 				"-static",
 				"-lglfw3dll",
 				"-o",
-				"${workspaceRoot}/builds/windows/main"
+				"${workspaceRoot}/builds/windows/Program"
 			],
 			"options": {
 				"cwd": "C:\\msys64\\mingw64\\bin"
