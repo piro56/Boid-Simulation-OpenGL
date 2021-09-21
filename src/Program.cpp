@@ -4,6 +4,7 @@
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);  
+void process_input(GLFWwindow *window);
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
@@ -41,6 +42,9 @@ int main() {
     // Render loop
     while(!glfwWindowShouldClose(window))
     {   
+        process_input(window);
+        glClearColor(0.9f, 0.2f, 0.7f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
         // Swapping buffers reduces artifacts.
         glfwSwapBuffers(window);
         // Polls events like keyboard/mouse inputs.
@@ -51,6 +55,12 @@ int main() {
     return 0;
 }
 
+void process_input(GLFWwindow *window) 
+{
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, true);
+    }
+}
 // When user resizes window, resize the window in OpenGL to the new width and height
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
