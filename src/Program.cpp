@@ -54,6 +54,14 @@ int main() {
         0.5f, -0.5f, 0.0f,
         0.0f,  0.5f, 0.0f
     };
+    
+
+    
+    // Use VAO, easier and I believe needed to draw objects.
+    unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);     // bind & configure corresponding VBO's ->  unbind
+
     // Create memory on the GPU to store vertex data
     // Vertex buffer object stores vertices on GPU memory
     unsigned int VBO;
@@ -64,6 +72,15 @@ int main() {
     // glBufferData copies defined vertex data into the buffer's memory
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     
+    // VERTEX ATTRIB POINTER tells GPU how to interpret shader data.
+    // In Vertex Shader: location = 0, this sets vertex attrib array location 0.
+    // This function applies to the currently bound VBO
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
+    // Enable vertex attribute with it's location
+    glEnableVertexAttribArray(0);
+
+
+
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);    // Create a shader
 
@@ -89,19 +106,15 @@ int main() {
     glDeleteShader(vertexShader);   // cleanup
     glDeleteShader(fragmentShader);
 
-    // VERTEX ATTRIB POINTER tells GPU how to interpret shader data.
-    // In Vertex Shader: location = 0, this sets vertex attrib array location 0.
-    // This function applies to the currently bound VBO
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
-    glEnableVertexAttribArray(0);
-
-
     // Render loop
     while(!glfwWindowShouldClose(window))
     {   
         process_input(window);
         glClearColor(0.9f, 0.2f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        
+
+        glDrawArrays(GL_TRIANGLES, 0, 3);
         // Swapping buffers reduces artifacts.
         glfwSwapBuffers(window);
         // Polls events like keyboard/mouse inputs.
