@@ -16,7 +16,7 @@ const char *vertexShaderSource = "#version 330 core\n"
     "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
     "}\0";
 const char *fragmentShaderSource = "#version 330 core\n"
-    "out vec4 FragColor;\nvoid main(){FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);}\0";
+    "out vec4 FragColor;\nvoid main(){FragColor = vec4(0.2f, 0.5f, 0.2f, 1.0f);}\0";
 int main() {
     // Initialize and configure GLFW -> Set the version & 
     // set profile to CORE so we do not get backwards-compatible features.
@@ -49,15 +49,22 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     // Two triangles, to create a square.
-    float vertices[] = {
+    float verticesOriginal[] = {
         -0.5f, -0.5f, 0.0f, // bottom left
         0.5f, -0.5f, 0.0f,  // bottom right
         0.5f,  0.5f, 0.0f,  // top right
         -0.5f, 0.5f, 0.0f   // top left
     };
+    float vertices[] = {
+        -0.6f, 0.0f, 0.0f,  // BLL
+        0.0f, 0.0f, 0.0f,   // BR
+        -0.3f, 0.6f, 0.0f,  // TM
+        0.6f, 0.0f, 0.0f,   // BRR
+        0.3f, 0.6f, 0.f     // TRM
+    };
     unsigned int indices[] = {
         0,1,2,
-        0,3,2 
+        1,3,4 
     };
 
 
@@ -118,12 +125,12 @@ int main() {
 
     glDeleteShader(vertexShader);   // cleanup
     glDeleteShader(fragmentShader);
-
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // Render loop
     while(!glfwWindowShouldClose(window))
     {   
         process_input(window);
-        glClearColor(0.9f, 0.2f, 0.7f, 1.0f);
+        glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
