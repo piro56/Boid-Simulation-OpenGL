@@ -48,13 +48,18 @@ int main() {
     // When window is resized -> call frambuffer_size_callback.
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // triangle vertices
+    // Two triangles, to create a square.
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f,  0.5f, 0.0f
+        -0.5f, -0.5f, 0.0f, // bottom left
+        0.5f, -0.5f, 0.0f,  // bottom right
+        0.5f,  0.5f, 0.0f,  // top right
+        -0.5f, 0.5f, 0.0f   // top left
     };
-    
+    unsigned int indices[] = {
+        0,1,2,
+        0,3,2 
+    };
+
 
     
     // Use VAO, easier and I believe needed to draw objects.
@@ -78,6 +83,14 @@ int main() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
     // Enable vertex attribute with it's location
     glEnableVertexAttribArray(0);
+
+    // Element buffer object, to create a square...
+    // instead of needing 6 points, we can use 4 and create 2 triangles.
+    unsigned int EBO;
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0) <- Draw for the indices.
 
 
 
@@ -112,9 +125,12 @@ int main() {
         process_input(window);
         glClearColor(0.9f, 0.2f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        
+        glUseProgram(shaderProgram);
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        //glDrawArrays(GL_TRIANGLES, 0, 3);
         // Swapping buffers reduces artifacts.
         glfwSwapBuffers(window);
         // Polls events like keyboard/mouse inputs.
