@@ -9,10 +9,10 @@
 				"${workspaceRoot}/src/Program.cpp",
 				// Include all source files.
 				"${workspaceRoot}/dependencies/GLAD/src/glad.c",
-
 				// Include .cpp files here (These are for .h file code)
 				//"${workspaceRoot}/src/shader.cpp",
 				//"${workspaceRoot}/src/engine.cpp",
+
 				
 				"-g",
 				"--std=c++17",

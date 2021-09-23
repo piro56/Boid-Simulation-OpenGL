@@ -4,6 +4,7 @@
 class VertexArray {
 private:
     unsigned int VAO;
+public:
     VertexArray();
     void bind();
     void unbind();
