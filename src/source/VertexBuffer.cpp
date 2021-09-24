@@ -25,6 +25,10 @@ void VertexBuffer::setVertexAttributePointer(GLuint index, GLint size, float typ
                                             GLsizei stride) {
     glVertexAttribPointer(index, size, type, GL_FALSE, stride, (void*) 0);
 }
+
+void VertexBuffer::enableAttribArray(unsigned int location) {
+    glEnableVertexAttribArray(location);
+}
 VertexBuffer::VertexBuffer() {
     glGenBuffers(1, &this->VBO);
 }

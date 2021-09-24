@@ -1,7 +1,8 @@
 #include <iostream>     
 #include <glad/glad.h>  // Manages function pointers
 #include <glfw3.h>      // Manages window
-
+#include "VertexBuffer.h"
+#include "VertexArray.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);  
 void compileCheck(unsigned int vertexShader);
@@ -67,25 +68,17 @@ int main() {
         0,1,2,
         1,3,4 
     };
-
-    unsigned int VAOs[2], VBOs[2];
-    glGenVertexArrays(2, VAOs);
-    glGenBuffers(2, VBOs);
-    glBindVertexArray(VAOs[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
-    glEnableVertexAttribArray(0);
+    VertexArray VAO;
+    VAO.bind();
+    VertexBuffer VBO;
+    VBO.bind();
+    VBO.setBufferData(sizeof(vertices), vertices, GL_STATIC_DRAW);
+    VBO.setVertexAttributePointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float));
+    VBO.enableAttribArray(0);
     unsigned int EBO;
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-    
-    glBindVertexArray(VAOs[1]);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesOriginal), verticesOriginal, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
-    glEnableVertexAttribArray(0);
 
     /*
     // Use VAO, easier and I believe needed to draw objects.
@@ -136,26 +129,16 @@ int main() {
     compileCheck(vertexShader);
     
     unsigned int fragmentShader;
-    unsigned int fragmentShaderYellow;
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    fragmentShaderYellow = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShaderYellow, 1, &fragmentShaderTwoSource, NULL);
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShaderYellow);
     glCompileShader(fragmentShader);
     compileCheck(fragmentShader);
-    compileCheck(fragmentShaderYellow);
 
     // Shader Program
     unsigned int shaderProgram;
-    unsigned int shaderProgramYellow;
     shaderProgram = glCreateProgram();
-    shaderProgramYellow = glCreateProgram();
-    glAttachShader(shaderProgramYellow, vertexShader);
     glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgramYellow, fragmentShaderYellow);
     glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgramYellow);
     glLinkProgram(shaderProgram);
     glUseProgram(shaderProgram);
 
@@ -169,12 +152,8 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(shaderProgram);
-        glBindVertexArray(VAOs[0]);
+        VAO.bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
-        glBindVertexArray(VAOs[1]);
-        glUseProgram(shaderProgramYellow);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
 
         //glDrawArrays(GL_TRIANGLES, 0, 3);
