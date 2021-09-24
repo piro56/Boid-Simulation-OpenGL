@@ -13,15 +13,12 @@ const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const char *vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
-    "layout (location = 1) in vec3 aColor;\n"
-    "out vec3 ourColor;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = vec4(aPos, 1.0);\n"
-    "   ourColor = aColor;\n"
+    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
     "}\0";
 const char *fragmentShaderSource = "#version 330 core\n"
-    "out vec4 FragColor;\nin vec3 ourColor;\nvoid main(){FragColor = vec4(ourColor, 1.0);}\0";
+    "out vec4 FragColor;\nuniform vec4 ourColor;\nvoid main(){FragColor = ourColor;}\0";
 int main() {
     // Initialize and configure GLFW -> Set the version & 
     // set profile to CORE so we do not get backwards-compatible features.
@@ -55,23 +52,28 @@ int main() {
 
     // Two triangles
     float vertices[] = {
-        // positions         // colors
-        0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,   // bottom left
-        0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+        -0.6f, 0.0f, 0.0f,  // BLL
+        0.0f, 0.0f, 0.0f,   // BR
+        -0.3f, 0.6f, 0.0f,  // TM
+        0.6f, 0.0f, 0.0f,   // BRR
+        0.3f, 0.6f, 0.f     // TRM
     };
-
+    unsigned int indices[] = {
+        0,1,2,
+        1,3,4 
+    };
     VertexArray VAO;
     VAO.bind();
     VertexBuffer VBO;
     VBO.bind();
     VBO.setBufferData(sizeof(vertices), vertices, GL_STATIC_DRAW);
-    VBO.setVertexAttributePointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*) 0);
-    // color attribute
-    VBO.setVertexAttributePointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
+    VBO.setVertexAttributePointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float));
     VBO.enableAttribArray(0);
-    VBO.enableAttribArray(1);
-    
+    unsigned int EBO;
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);    // Create a shader
 
@@ -107,7 +109,10 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
         VAO.bind();
         glUseProgram(shaderProgram);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        float timeValue = glfwGetTime();
+        float greenValue = (std::sin(timeValue) / 2.0f) + 0.5f;
+        glUniform4f(vertexColorLocation, 0.2f, greenValue, 0.0f, 1.0f);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
         //glDrawArrays(GL_TRIANGLES, 0, 3);

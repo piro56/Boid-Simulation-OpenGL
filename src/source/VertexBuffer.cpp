@@ -21,6 +21,14 @@ void VertexBuffer::setVertexAttributePointer(GLuint index, GLint size,
                                             GLsizei stride) {
     glVertexAttribPointer(index, size, type, normalized, stride, (void*) 0);
 }
+
+void VertexBuffer::setVertexAttributePointer(GLuint index, GLint size, 
+                                            GLenum type, GLboolean normalized, 
+                                            GLsizei stride, const void* offset) {
+    glVertexAttribPointer(index, size, type, normalized, stride, offset);
+}
+
+
 void VertexBuffer::setVertexAttributePointer(GLuint index, GLint size, float type,
                                             GLsizei stride) {
     glVertexAttribPointer(index, size, type, GL_FALSE, stride, (void*) 0);
