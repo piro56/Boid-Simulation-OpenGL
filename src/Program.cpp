@@ -4,7 +4,7 @@
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);  
 void compileCheck(unsigned int vertexShader);
 void linkCheck(unsigned int shaderProgram);
 void process_input(GLFWwindow *window);
@@ -21,13 +21,13 @@ const char *fragmentShaderSource = "#version 330 core\n"
     const char *fragmentShaderTwoSource = "#version 330 core\n"
     "out vec4 FragColor;\nvoid main(){FragColor = vec4(0.9f, 0.9f, 0.1f, 1.0f);}\0";
 int main() {
-    // Initialize and configure GLFW -> Set the version &
+    // Initialize and configure GLFW -> Set the version & 
     // set profile to CORE so we do not get backwards-compatible features.
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+    
     // Create window object.
     GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
@@ -66,7 +66,7 @@ int main() {
     };
     unsigned int indices[] = {
         0,1,2,
-        1,3,4
+        1,3,4 
     };
     VertexArray VAO;
     VAO.bind();
@@ -92,11 +92,11 @@ int main() {
     glGenBuffers(1, &VBO);  // Generate 1 buffer, save it to VBO
     glGenBuffers(1, &VBOTwo);
     // Specify buffer type, this is the type of a vertex array buffer
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);     
     // From here on out, all calls on "GL_ARRAY_BUFFER" will now be on VBO.
     // glBufferData copies defined vertex data into the buffer's memory
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+    
     // VERTEX ATTRIB POINTER tells GPU how to interpret shader data.
     // In Vertex Shader: location = 0, this sets vertex attrib array location 0.
     // This function applies to the currently bound VBO
@@ -119,7 +119,6 @@ int main() {
     // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0) <- Draw for the indices.
     */
 
-
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);    // Create a shader
 
@@ -127,7 +126,7 @@ int main() {
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     glCompileShader(vertexShader);
     compileCheck(vertexShader);
-
+    
     unsigned int fragmentShader;
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
@@ -147,7 +146,7 @@ int main() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // Render loop
     while(!glfwWindowShouldClose(window))
-    {
+    {   
         process_input(window);
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -160,14 +159,14 @@ int main() {
         // Swapping buffers reduces artifacts.
         glfwSwapBuffers(window);
         // Polls events like keyboard/mouse inputs.
-        glfwPollEvents();
+        glfwPollEvents();    
     }
-
+    
     glfwTerminate();
     return 0;
 }
 
-void process_input(GLFWwindow *window)
+void process_input(GLFWwindow *window) 
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
@@ -177,7 +176,7 @@ void process_input(GLFWwindow *window)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
-}
+}  
 
 void compileCheck(unsigned int vertexShader) {
     int  success;
