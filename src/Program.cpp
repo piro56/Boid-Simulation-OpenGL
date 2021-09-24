@@ -118,12 +118,12 @@ int main() {
 
     glDeleteShader(vertexShader);   // cleanup
     glDeleteShader(fragmentShader);
-
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // Render loop
     while(!glfwWindowShouldClose(window))
     {   
         process_input(window);
-        glClearColor(0.9f, 0.2f, 0.7f, 1.0f);
+        glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
