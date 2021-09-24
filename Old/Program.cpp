@@ -1,10 +1,9 @@
 #include <iostream>     
 #include <glad/glad.h>  // Manages function pointers
 #include <glfw3.h>      // Manages window
-#include "VertexBuffer.h"
-#include "VertexArray.h"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);  
 void compileCheck(unsigned int vertexShader);
 void linkCheck(unsigned int shaderProgram);
 void process_input(GLFWwindow *window);
@@ -18,16 +17,14 @@ const char *vertexShaderSource = "#version 330 core\n"
     "}\0";
 const char *fragmentShaderSource = "#version 330 core\n"
     "out vec4 FragColor;\nvoid main(){FragColor = vec4(0.2f, 0.5f, 0.2f, 1.0f);}\0";
-    const char *fragmentShaderTwoSource = "#version 330 core\n"
-    "out vec4 FragColor;\nvoid main(){FragColor = vec4(0.9f, 0.9f, 0.1f, 1.0f);}\0";
 int main() {
-    // Initialize and configure GLFW -> Set the version &
+    // Initialize and configure GLFW -> Set the version & 
     // set profile to CORE so we do not get backwards-compatible features.
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+    
     // Create window object.
     GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
@@ -53,9 +50,10 @@ int main() {
 
     // Two triangles, to create a square.
     float verticesOriginal[] = {
-        -0.3f, -0.5f, 0.0f, // bottom left
-        0.3f, -0.5f, 0.0f,  // bottom right
-        0.0f,  0.75f, 0.0f,  // middle
+        -0.5f, -0.5f, 0.0f, // bottom left
+        0.5f, -0.5f, 0.0f,  // bottom right
+        0.5f,  0.5f, 0.0f,  // top right
+        -0.5f, 0.5f, 0.0f   // top left
     };
     float vertices[] = {
         -0.6f, 0.0f, 0.0f,  // BLL
@@ -66,21 +64,11 @@ int main() {
     };
     unsigned int indices[] = {
         0,1,2,
-        1,3,4
+        1,3,4 
     };
-    VertexArray VAO;
-    VAO.bind();
-    VertexBuffer VBO;
-    VBO.bind();
-    VBO.setBufferData(sizeof(vertices), vertices, GL_STATIC_DRAW);
-    VBO.setVertexAttributePointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float));
-    VBO.enableAttribArray(0);
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
 
-    /*
+
+    
     // Use VAO, easier and I believe needed to draw objects.
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
@@ -88,25 +76,18 @@ int main() {
 
     // Create memory on the GPU to store vertex data
     // Vertex buffer object stores vertices on GPU memory
-    unsigned int VBO, VBOTwo;
+    unsigned int VBO;
     glGenBuffers(1, &VBO);  // Generate 1 buffer, save it to VBO
-    glGenBuffers(1, &VBOTwo);
     // Specify buffer type, this is the type of a vertex array buffer
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);     
     // From here on out, all calls on "GL_ARRAY_BUFFER" will now be on VBO.
     // glBufferData copies defined vertex data into the buffer's memory
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+    
     // VERTEX ATTRIB POINTER tells GPU how to interpret shader data.
     // In Vertex Shader: location = 0, this sets vertex attrib array location 0.
     // This function applies to the currently bound VBO
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
-    glEnableVertexAttribArray(0);
-    // Bind second buffer, and read in it's data and how to interpret.
-    glBindBuffer(GL_ARRAY_BUFFER, VBOTwo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesOriginal), verticesOriginal, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
-
     // Enable vertex attribute with it's location
     glEnableVertexAttribArray(0);
 
@@ -117,7 +98,7 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
     // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0) <- Draw for the indices.
-    */
+
 
 
     unsigned int vertexShader;
@@ -127,7 +108,7 @@ int main() {
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     glCompileShader(vertexShader);
     compileCheck(vertexShader);
-
+    
     unsigned int fragmentShader;
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
@@ -144,15 +125,15 @@ int main() {
 
     glDeleteShader(vertexShader);   // cleanup
     glDeleteShader(fragmentShader);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // Render loop
     while(!glfwWindowShouldClose(window))
-    {
+    {   
         process_input(window);
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(shaderProgram);
-        VAO.bind();
+        glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
@@ -160,14 +141,14 @@ int main() {
         // Swapping buffers reduces artifacts.
         glfwSwapBuffers(window);
         // Polls events like keyboard/mouse inputs.
-        glfwPollEvents();
+        glfwPollEvents();    
     }
-
+    
     glfwTerminate();
     return 0;
 }
 
-void process_input(GLFWwindow *window)
+void process_input(GLFWwindow *window) 
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
@@ -177,7 +158,7 @@ void process_input(GLFWwindow *window)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
-}
+}  
 
 void compileCheck(unsigned int vertexShader) {
     int  success;
