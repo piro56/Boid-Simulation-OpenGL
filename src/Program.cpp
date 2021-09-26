@@ -7,20 +7,10 @@
 #include "ShaderProgram.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void compileCheck(unsigned int vertexShader);
-void linkCheck(unsigned int shaderProgram);
 void process_input(GLFWwindow *window);
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
-const char *vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "layout (location = 1) in vec3 aColor;\n"
-    "out vec3 ourColor;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos, 1.0);\n"
-    "   ourColor = aColor;\n"
-    "}\0";
+
 int main() {
     // Initialize and configure GLFW -> Set the version &
     // set profile to CORE so we do not get backwards-compatible features.
@@ -105,25 +95,4 @@ void process_input(GLFWwindow *window)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
-}
-
-void compileCheck(unsigned int vertexShader) {
-    int  success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if(!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-}
-
-void linkCheck(unsigned int shaderProgram) {
-        int  success;
-        char infoLog[512];
-        glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if(!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADERPROGRAM::LINK_FAILED\n" << infoLog << std::endl;
-    }
 }
