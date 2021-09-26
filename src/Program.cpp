@@ -64,8 +64,8 @@ int main() {
     VBO.setVertexAttributePointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
     VBO.enableAttribArray(0);
     VBO.enableAttribArray(1);
-    ShaderProgram myShader(get_shader_file("default.vs"), 
-                          get_shader_file("default.fs"));
+    ShaderProgram myShader(get_shader_file("upside_down.vs"), 
+                          get_shader_file("upside_down.fs"));
 /*     ShaderProgram myShader("C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.vs", 
                            "C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.fs"); */
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -76,7 +76,10 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         VAO.bind();
+        float timeValue = glfwGetTime();
+        float offsetValue = sin(timeValue) / 2.0f;
         myShader.use();
+        myShader.setFloat("ourZOffset", offsetValue);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
 
