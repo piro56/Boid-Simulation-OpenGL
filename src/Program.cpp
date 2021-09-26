@@ -60,7 +60,6 @@ int main() {
         -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,   // bottom left
         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
     };
-
     VertexArray VAO;
     VAO.bind();
     VertexBuffer VBO;
@@ -71,7 +70,7 @@ int main() {
     VBO.setVertexAttributePointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
     VBO.enableAttribArray(0);
     VBO.enableAttribArray(1);
-    
+
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);    // Create a shader
 

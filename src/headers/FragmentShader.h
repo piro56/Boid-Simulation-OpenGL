@@ -1,5 +1,4 @@
 #include <glad/glad.h>  // Manages function pointers
-#include <glfw3.h>      // Manages window
 #include <string>
 #include <iostream>
 
