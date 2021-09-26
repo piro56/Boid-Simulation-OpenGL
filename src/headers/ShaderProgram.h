@@ -4,7 +4,6 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <filesystem>
 // TODO: Derived classes!!
 // Combine Vertex and Fragment into one.
 
@@ -23,10 +22,11 @@ public:
     //void loadShaders(std::string vertexShaderPath, std::string fragShaderPath);
     void compileCheck(unsigned int vertexShader, bool vertex);
     void use();
+    void load(const char* vertexPath, const char* fragPath);
     void setBool(const std::string &name, bool value) const;
     void setInt(const std::string &name, int value) const;
     void setFloat(const std::string &name, float value) const;
-    //ShaderProgram(std::string vertexShaderPath, std::string fragShaderPath);
+    ShaderProgram(std::string vertexShaderPath, std::string fragShaderPath);
     ShaderProgram(const char* vertexPath, const char* fragPath);
     ShaderProgram();
     

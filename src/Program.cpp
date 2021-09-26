@@ -5,9 +5,14 @@
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "ShaderProgram.h"
+#include <windows.h>
+#include <filesystem>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow *window);
+
+std::string getexepath();
+std::string get_shader_file(std::string fileName);
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
@@ -59,9 +64,10 @@ int main() {
     VBO.setVertexAttributePointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
     VBO.enableAttribArray(0);
     VBO.enableAttribArray(1);
-
-    ShaderProgram myShader("C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.vs", 
-                           "C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.fs");
+    ShaderProgram myShader(get_shader_file("default.vs"), 
+                          get_shader_file("default.fs"));
+/*     ShaderProgram myShader("C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.vs", 
+                           "C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.fs"); */
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // Render loop
     while(!glfwWindowShouldClose(window))
@@ -95,4 +101,18 @@ void process_input(GLFWwindow *window)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+std::string getexepath()
+{
+  char result[ MAX_PATH ];
+  return std::string( result, GetModuleFileName( NULL, result, MAX_PATH ) );
+}
+
+std::string get_shader_file(std::string fileName) {
+    std::string s = getexepath();
+    s = s.substr(0, s.find("builds"));
+    s = s + "src\\shaders\\" + fileName;
+    //std::cout << "OUTPUT S:" << s << "\n\n";
+    return s;
 }
