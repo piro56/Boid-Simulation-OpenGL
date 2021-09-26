@@ -15,6 +15,7 @@ void ShaderProgram::use() {
     glUseProgram(this->shaderProgram);
 }
 
+
 void ShaderProgram::loadShaders(std::string vertexShaderPath, std::string fragShaderPath) {
     // LOAD CHAR*
     if(this->loaded) {
@@ -29,13 +30,36 @@ void ShaderProgram::loadShaders(std::string vertexShaderPath, std::string fragSh
     glShaderSource(this->vertexShader, 1, &vertexShaderSource, NULL);
     glShaderSource(this->vertexShader, 1, &fragShaderSource, NULL);
     
-    // COMPILE AND ATTACH...
+    // COMPILE
+    glCompileShader(this->vertexShader);
+    compileCheck(this->vertexShader);
+    glCompileShader(this->fragmentShader);
+    compileCheck(this->fragmentShader);
 
-
+    // ATTACH
+    glAttachShader(this->shaderProgram, this->vertexShader);
+    glAttachShader(this->shaderProgram, this->fragmentShader);
+    
     // Cleanup dynamically allocated characters.
     delete[] vertexShaderSource;
     delete[] fragShaderSource;
     glDeleteShader(this->vertexShader);
     glDeleteShader(this->fragmentShader);
 
+}
+
+void ShaderProgram::compileCheck(unsigned int shader, bool vertex) {
+    int  success;
+    char infoLog[512];
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if(!success)
+    {
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        if(vertex) {
+            std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+        } else {
+            std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        }
+        
+    }
 }

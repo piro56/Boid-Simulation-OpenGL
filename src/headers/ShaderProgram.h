@@ -21,8 +21,9 @@ public:
     
     // Compile shaders and link
     void loadShaders(std::string vertexShaderPath, std::string fragShaderPath);
-
+    void compileCheck(unsigned int vertexShader, bool vertex);
     void use();
     ShaderProgram(std::string vertexShaderPath, std::string fragShaderPath);
     ShaderProgram();
+    
 };
