@@ -4,6 +4,7 @@
 #include <glfw3.h>      // Manages window
 #include "VertexBuffer.h"
 #include "VertexArray.h"
+#include "ShaderProgram.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void compileCheck(unsigned int vertexShader);
@@ -20,8 +21,6 @@ const char *vertexShaderSource = "#version 330 core\n"
     "   gl_Position = vec4(aPos, 1.0);\n"
     "   ourColor = aColor;\n"
     "}\0";
-const char *fragmentShaderSource = "#version 330 core\n"
-    "out vec4 FragColor;\nin vec3 ourColor;\nvoid main(){FragColor = vec4(ourColor, 1.0);}\0";
 int main() {
     // Initialize and configure GLFW -> Set the version &
     // set profile to CORE so we do not get backwards-compatible features.
@@ -69,85 +68,19 @@ int main() {
     // color attribute
     VBO.setVertexAttributePointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
     VBO.enableAttribArray(0);
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+    VBO.enableAttribArray(1);
 
-    /*
-    // Use VAO, easier and I believe needed to draw objects.
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);     // bind & configure corresponding VBO's ->  unbind
-
-    // Create memory on the GPU to store vertex data
-    // Vertex buffer object stores vertices on GPU memory
-    unsigned int VBO, VBOTwo;
-    glGenBuffers(1, &VBO);  // Generate 1 buffer, save it to VBO
-    glGenBuffers(1, &VBOTwo);
-    // Specify buffer type, this is the type of a vertex array buffer
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // From here on out, all calls on "GL_ARRAY_BUFFER" will now be on VBO.
-    // glBufferData copies defined vertex data into the buffer's memory
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // VERTEX ATTRIB POINTER tells GPU how to interpret shader data.
-    // In Vertex Shader: location = 0, this sets vertex attrib array location 0.
-    // This function applies to the currently bound VBO
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
-    glEnableVertexAttribArray(0);
-    // Bind second buffer, and read in it's data and how to interpret.
-    glBindBuffer(GL_ARRAY_BUFFER, VBOTwo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesOriginal), verticesOriginal, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
-
-    // Enable vertex attribute with it's location
-    glEnableVertexAttribArray(0);
-
-    // Element buffer object, to create a square...
-    // instead of needing 6 points, we can use 4 and create 2 triangles.
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0) <- Draw for the indices.
-    */
-
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);    // Create a shader
-
-    // Attach shader source code to our created shader & compile
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-    compileCheck(vertexShader);
-
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    compileCheck(fragmentShader);
-
-    // Shader Program
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glUseProgram(shaderProgram);
-
-    glDeleteShader(vertexShader);   // cleanup
-    glDeleteShader(fragmentShader);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    ShaderProgram myShader("C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.vs", 
+                           "C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.fs");
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // Render loop
-
-    int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
     while(!glfwWindowShouldClose(window))
     {
         process_input(window);
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         VAO.bind();
-        glUseProgram(shaderProgram);
+        myShader.use();
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
 
