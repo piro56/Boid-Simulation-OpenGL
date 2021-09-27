@@ -23,6 +23,7 @@ void ShaderProgram::loadShaders(std::string vertexShaderPath, std::string fragSh
     }
     
     // specify size of Source and place it in the source
+    // TODO: FIll this char* in!
     char* vertexShaderSource = new char();
     char* fragShaderSource = new char();
 
