@@ -21,17 +21,29 @@ void VertexBuffer::setVertexAttributePointer(GLuint index, GLint size,
                                             GLsizei stride) {
     glVertexAttribPointer(index, size, type, normalized, stride, (void*) 0);
 }
+
+// All arguments
+void VertexBuffer::setVertexAttributePointer(GLuint index, GLint size, 
+                                            GLenum type, GLboolean normalized, 
+                                            GLsizei stride, const void* offset) {
+    glVertexAttribPointer(index, size, type, normalized, stride, offset);
+}
+
+// Does not include normalized and offset.
 void VertexBuffer::setVertexAttributePointer(GLuint index, GLint size, float type,
                                             GLsizei stride) {
     glVertexAttribPointer(index, size, type, GL_FALSE, stride, (void*) 0);
 }
 
+// Enables the attribute at location.
 void VertexBuffer::enableAttribArray(unsigned int location) {
     glEnableVertexAttribArray(location);
 }
 VertexBuffer::VertexBuffer() {
     glGenBuffers(1, &this->VBO);
 }
+
+
 VertexBuffer::~VertexBuffer() {
     glDeleteBuffers(1, &this->VBO);
 }

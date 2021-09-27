@@ -1,5 +1,4 @@
 #include <glad\glad.h>
-#include <glfw3.h>
 
 class VertexBuffer {
 private:
@@ -12,6 +11,9 @@ public:
     void setVertexAttributePointer(GLuint index, GLint size, GLenum type,
                                    GLboolean normalized, GLsizei stride);
     void setVertexAttributePointer(GLuint index, GLint size, float type, GLsizei stride);
+    void setVertexAttributePointer(GLuint index, GLint size, 
+                                            GLenum type, GLboolean normalized, 
+                                            GLsizei stride, const void* offset);
     void enableAttribArray(unsigned int location);
     VertexBuffer();
     ~VertexBuffer();
