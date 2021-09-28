@@ -5,6 +5,7 @@
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "ShaderProgram.h"
+#include "ElementBuffer.h"
 #include <windows.h>
 #include <filesystem>
 #include "stb_image.h"
@@ -64,11 +65,10 @@ int main() {
     VAO.bind();
     VertexBuffer VBO;
     VBO.bind();
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
+    ElementBuffer EBO;
+    EBO.bind();
+    EBO.setData(sizeof(indices), indices, GL_STATIC_DRAW);
     VBO.setBufferData(sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     // position attribute
     VBO.setVertexAttributePointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) 0);
     VBO.enableAttribArray(0);
