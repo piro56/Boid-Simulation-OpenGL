@@ -78,7 +78,7 @@ int main() {
         VAO.bind();
         float timeValue = glfwGetTime();
         float offsetValue = sin(timeValue) / 2.0f;
-        myShader.use();
+        myShader.use();  
         myShader.setFloat("ourZOffset", offsetValue);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
