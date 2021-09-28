@@ -51,10 +51,10 @@ int main() {
     // Two triangles
     float vertices[] = {
     // positions          // colors           // texture coords
-     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left
+     0.25f,  0.25f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+     0.25f, -0.25f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+    -0.25f, -0.25f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+    -0.25f,  0.25f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left
     };
     unsigned int indices[] = {
     0, 1, 3, // first triangle
@@ -87,8 +87,10 @@ int main() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
     //              texture type, axis, wrapping option
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
     // Texture filtering for magnification and minification
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -114,13 +116,14 @@ int main() {
 
 
 
-    ShaderProgram myShader(get_shader_file("vertex\\textured.vs"),
-                          get_shader_file("fragment\\textured.fs"));
+    ShaderProgram myShader(get_shader_file("vertex\\dvd.vs"),
+                          get_shader_file("fragment\\dvd.fs"));
 /*     ShaderProgram myShader("C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.vs",
                            "C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.fs"); */
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     myShader.use();
     myShader.setInt("texture1", 0);
+
     // Render loop
     while(!glfwWindowShouldClose(window))
     {
@@ -129,11 +132,13 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
         float timeValue = glfwGetTime();
         float offsetValue = sin(timeValue) / 2.0f;
+        float offsetValueTwo = cos(timeValue) / 2.0f;
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture);
         VAO.bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         myShader.use();
+        myShader.setVec2Float("dvdOffset", offsetValue, offsetValueTwo);
         glBindVertexArray(0);
 
         //glDrawArrays(GL_TRIANGLES, 0, 3);
