@@ -26,6 +26,7 @@ public:
     void setBool(const std::string &name, bool value) const;
     void setInt(const std::string &name, int value) const;
     void setFloat(const std::string &name, float value) const;
+    void setVec2Float(const std::string &name, float value_one, float value_two) const;
     void setVec4Float(const std::string &name, float value_one, float value_two, float value_three, float value_four) const;
     ShaderProgram(std::string vertexShaderPath, std::string fragShaderPath);
     ShaderProgram(const char* vertexPath, const char* fragPath);

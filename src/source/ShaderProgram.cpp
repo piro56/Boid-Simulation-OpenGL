@@ -50,7 +50,9 @@ void ShaderProgram::setVec4Float(const std::string &name, float value_one, float
     glUniform4f(glGetUniformLocation(this->shaderProgramID, name.c_str()), value_one, value_two, value_three, value_four);
 }
 
-
+void ShaderProgram::setVec2Float(const std::string &name, float value_one, float value_two) const {
+    glUniform2f(glGetUniformLocation(this->shaderProgramID, name.c_str()), value_one, value_two);
+}
 void ShaderProgram::load(const char* vertexPath, const char* fragPath) {
     unsigned int vertexShader;
     unsigned int fragmentShader;
