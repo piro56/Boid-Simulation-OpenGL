@@ -75,8 +75,8 @@ void ShaderProgram::load(const char* vertexPath, const char* fragPath) {
     } else {
         std::cout << "ERROR::SHADERPROGRAM::FILE_READ_ERROR......" << std::endl;
     }
-
-
+    //std::cout << "-------------Fragment---------------\n" << fragCode << "\n--------\n"; 
+    //std::cout << "-------------Vertex---------------\n" << vertexCode << "\n--------\n"; 
 
 /*     try {
         // open files
