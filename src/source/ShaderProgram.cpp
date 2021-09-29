@@ -30,7 +30,7 @@ void ShaderProgram::compileCheck(unsigned int shader, bool vertex) {
         } else {
             std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
         }
-        
+
     }
 }
 
@@ -58,12 +58,12 @@ void ShaderProgram::load(const char* vertexPath, const char* fragPath) {
     unsigned int fragmentShader;
     std::string vertexCode;
     std::string fragCode;
-    std::ifstream vShaderFile;  
+    std::ifstream vShaderFile;
     std::ifstream fShaderFile;
     // Ensure ifstream can throw exceptions
     vShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
     fShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
-    
+
     vShaderFile = std::ifstream(vertexPath);
     fShaderFile = std::ifstream(fragPath);
     if(vShaderFile.is_open() && fShaderFile.is_open()) {
@@ -106,7 +106,7 @@ void ShaderProgram::load(const char* vertexPath, const char* fragPath) {
 
     glShaderSource(vertexShader, 1, &vShaderCode, NULL);
     glShaderSource(fragmentShader, 1, &fShaderCode, NULL);
-    
+
     // COMPILE
     glCompileShader(vertexShader);
     compileCheck(vertexShader, true);

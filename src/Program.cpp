@@ -5,6 +5,7 @@
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "ShaderProgram.h"
+#include "ElementBuffer.h"
 #include <windows.h>
 #include <filesystem>
 #include "stb_image.h"
@@ -54,7 +55,7 @@ int main() {
      0.25f,  0.25f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
      0.25f, -0.25f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
     -0.25f, -0.25f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-    -0.25f,  0.25f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+    -0.25f,  0.25f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left
     };
     unsigned int indices[] = {
     0, 1, 3, // first triangle
@@ -64,11 +65,10 @@ int main() {
     VAO.bind();
     VertexBuffer VBO;
     VBO.bind();
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
+    ElementBuffer EBO;
+    EBO.bind();
+    EBO.setData(sizeof(indices), indices, GL_STATIC_DRAW);
     VBO.setBufferData(sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     // position attribute
     VBO.setVertexAttributePointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) 0);
     VBO.enableAttribArray(0);
@@ -78,37 +78,34 @@ int main() {
     // texture coordinates...
     VBO.setVertexAttributePointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     VBO.enableAttribArray(2);
-    // glEnable(GL_BLEND);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
     unsigned int texture;
-    glGenTextures(1, &texture);  
+    glGenTextures(1, &texture);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);  
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //              texture type, axis, wrapping option
-    float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float borderColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
     // Texture filtering for magnification and minification
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glEnable(GL_BLEND);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glAlphaFunc(GL_NOTEQUAL, 0.0f);
-    glEnable(GL_ALPHA_TEST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true);  
-    unsigned char *data = stbi_load(get_shader_file("imgs\\dvd.jpg").c_str(), &width, &height, &nrChannels, 3); 
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char *data = stbi_load(get_shader_file("imgs\\dvd.png").c_str(), &width, &height, &nrChannels, 4);
+    std::cout << "LOADED TEXTURE CHANNELS: " << nrChannels << std::endl;
     if(data) {
         // JPEG LOAD
         //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         // PNG LOAD
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA2, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else {
@@ -120,9 +117,9 @@ int main() {
 
 
 
-    ShaderProgram myShader(get_shader_file("vertex\\dvd.vs"), 
+    ShaderProgram myShader(get_shader_file("vertex\\dvd.vs"),
                           get_shader_file("fragment\\dvd.fs"));
-/*     ShaderProgram myShader("C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.vs", 
+/*     ShaderProgram myShader("C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.vs",
                            "C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.fs"); */
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     myShader.use();
