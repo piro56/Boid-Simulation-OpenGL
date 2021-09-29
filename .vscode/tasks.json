@@ -15,11 +15,15 @@
 				"${workspaceRoot}/src/source/ShaderProgram.cpp",
 				"${workspaceRoot}/src/source/stb_image.cpp",
 				"${workspaceRoot}/src/source/ElementBuffer.cpp",
-				//"${workspaceRoot}/src/engine.cpp",
+				
+				// PROJECT DEPENDENCIES
 
+				"${workspaceRoot}/src/projects/dvdbouncer/DVD.cpp",
+				
 				
 				"-g",
 				"--std=c++17",
+				"-I${workspaceRoot}/src/projects/dvdbouncer",	// PROJECT
 				"-I${workspaceRoot}/src/Headers",
 				"-I${workspaceRoot}/dependencies/GLFW/include",
 				"-I${workspaceFolder}/dependencies/GLAD/include",
