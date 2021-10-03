@@ -77,24 +77,21 @@ int main() {
     VBO.setVertexAttributePointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     VBO.enableAttribArray(2);
 
-
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glEnable(GL_BLEND);
+    Texture myTexture = Texture(GL_TEXTURE0);
+    myTexture.bindEnable();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //              texture type, axis, wrapping option
     float borderColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+    myTexture.setParameteri(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    myTexture.setParameteri(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    myTexture.setParameterfv(GL_TEXTURE_BORDER_COLOR, borderColor);
     // Texture filtering for magnification and minification
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    int width, height, nrChannels;
+    myTexture.setParameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    myTexture.setParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    myTexture.loadPNG(ShaderProgram::get_shader("imgs\\dvd.png"));
+/*     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
     unsigned char *data = stbi_load(ShaderProgram::get_shader_file("imgs\\dvd.png").c_str(), &width, &height, &nrChannels, 4);
     if(data) {
@@ -108,7 +105,7 @@ int main() {
     else {
         std::cout << "Failed to load texture..";
     }
-    stbi_image_free(data);
+    stbi_image_free(data); */
 
 
 
@@ -131,8 +128,7 @@ int main() {
         float timeValue = glfwGetTime();
         float offsetValue = sin(timeValue) / 2.0f;
         float offsetValueTwo = cos(timeValue) / 2.0f;
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        myTexture.bindEnable();
         VAO.bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         myShader.use();
