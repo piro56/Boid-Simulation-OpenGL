@@ -15,7 +15,7 @@
 				"${workspaceRoot}/src/source/ShaderProgram.cpp",
 				"${workspaceRoot}/src/source/stb_image.cpp",
 				"${workspaceRoot}/src/source/ElementBuffer.cpp",
-				
+				"${workspaceRoot}/src/source/Texture.cpp",
 				// PROJECT DEPENDENCIES
 
 				"${workspaceRoot}/src/projects/dvdbouncer/DVD.cpp",

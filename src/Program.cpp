@@ -9,7 +9,7 @@
 #include <windows.h>
 #include <filesystem>
 #include "stb_image.h"
-
+#include "Texture.h"
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow *window);
 
@@ -97,12 +97,11 @@ int main() {
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
     unsigned char *data = stbi_load(ShaderProgram::get_shader_file("imgs\\dvd.png").c_str(), &width, &height, &nrChannels, 4);
-    std::cout << "LOADED TEXTURE CHANNELS: " << nrChannels << std::endl;
     if(data) {
         // JPEG LOAD
         //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         // PNG LOAD
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA2, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }

@@ -1,6 +1,7 @@
 #pragma once
-#include <glad/glad.h>
+#include <glad/glad.h
 #include "stb_image.h"
+#include <string>
 class Texture {
 private:
     unsigned int ID;
@@ -16,7 +17,7 @@ public:
     };
 
     // Parameters
-    void setParameteri();
+    void Texture::setParameteri(GLenum pName, int param);
     void setParameterfv();
 
     // load png and JPG texture
