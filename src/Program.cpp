@@ -13,8 +13,6 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow *window);
 
-std::string getexepath();
-std::string get_shader_file(std::string fileName);
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
@@ -98,7 +96,7 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load(get_shader_file("imgs\\dvd.png").c_str(), &width, &height, &nrChannels, 4);
+    unsigned char *data = stbi_load(ShaderProgram::get_shader_file("imgs\\dvd.png").c_str(), &width, &height, &nrChannels, 4);
     std::cout << "LOADED TEXTURE CHANNELS: " << nrChannels << std::endl;
     if(data) {
         // JPEG LOAD
@@ -117,8 +115,8 @@ int main() {
 
 
 
-    ShaderProgram myShader(get_shader_file("vertex\\dvd.vs"),
-                          get_shader_file("fragment\\dvd.fs"));
+    ShaderProgram myShader(ShaderProgram::get_shader_file("vertex\\dvd.vs"),
+                          ShaderProgram::get_shader_file("fragment\\dvd.fs"));
 /*     ShaderProgram myShader("C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.vs",
                            "C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.fs"); */
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -163,18 +161,4 @@ void process_input(GLFWwindow *window)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
-}
-
-std::string getexepath()
-{
-  char result[ MAX_PATH ];
-  return std::string( result, GetModuleFileName( NULL, result, MAX_PATH ) );
-}
-
-std::string get_shader_file(std::string fileName) {
-    std::string s = getexepath();
-    s = s.substr(0, s.find("builds"));
-    s = s + "src\\shaders\\" + fileName;
-    //std::cout << "OUTPUT S:" << s << "\n\n";
-    return s;
 }

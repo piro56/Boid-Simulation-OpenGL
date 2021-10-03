@@ -130,3 +130,12 @@ void ShaderProgram::load(const char* vertexPath, const char* fragPath) {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 }
+
+
+std::string ShaderProgram::get_shader_file(std::string fileName) {
+    std::string s = ShaderProgram::getexepath();
+    s = s.substr(0, s.find("builds"));
+    s = s + "src\\shaders\\" + fileName;
+    //std::cout << "OUTPUT S:" << s << "\n\n";
+    return s;
+}

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <windows.h>
 // TODO: Derived classes!!
 // Combine Vertex and Fragment into one.
 
@@ -28,6 +29,11 @@ public:
     void setFloat(const std::string &name, float value) const;
     void setVec2Float(const std::string &name, float value_one, float value_two) const;
     void setVec4Float(const std::string &name, float value_one, float value_two, float value_three, float value_four) const;
+    inline static std::string getexepath() {
+        char result[ MAX_PATH ];
+        return std::string( result, GetModuleFileName( NULL, result, MAX_PATH ) );
+    }
+    static std::string get_shader_file(std::string fileName);
     ShaderProgram(std::string vertexShaderPath, std::string fragShaderPath);
     ShaderProgram(const char* vertexPath, const char* fragPath);
     ShaderProgram();
