@@ -8,7 +8,7 @@ uniform sampler2D texture1;
 void main()
 {
     // Set the texture first
-    FragColor = texture(texture1, TexCoord);
+    FragColor = texture(texture1, vec2(-TexCoord.x, TexCoord.y));
     // discard transparent parts
     if(FragColor.a == 0.0) {
         discard;

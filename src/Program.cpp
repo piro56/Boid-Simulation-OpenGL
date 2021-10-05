@@ -90,26 +90,8 @@ int main() {
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     myTexture.setParameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     myTexture.setParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    myTexture.loadPNG(ShaderProgram::get_shader("imgs\\dvd.png"));
-/*     int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load(ShaderProgram::get_shader_file("imgs\\dvd.png").c_str(), &width, &height, &nrChannels, 4);
-    if(data) {
-        // JPEG LOAD
-        //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        // PNG LOAD
-        //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA2, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else {
-        std::cout << "Failed to load texture..";
-    }
-    stbi_image_free(data); */
-
-
-
-
+    std::string pngLocation = ShaderProgram::get_shader_file("imgs\\dvd.png");
+    myTexture.loadPNG(pngLocation, false);
 
     ShaderProgram myShader(ShaderProgram::get_shader_file("vertex\\dvd.vs"),
                           ShaderProgram::get_shader_file("fragment\\dvd.fs"));

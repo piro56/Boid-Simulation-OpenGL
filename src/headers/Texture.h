@@ -1,5 +1,6 @@
 #pragma once
-#include <glad/glad.h
+#include <iostream>
+#include <glad/glad.h>
 #include "stb_image.h"
 #include <string>
 class Texture {
@@ -17,13 +18,12 @@ public:
     };
 
     // Parameters
-    void Texture::setParameteri(GLenum pName, int param);
-    void setParameterfv();
-
+    void setParameteri(GLenum pName, int param);
+    void setParameterfv(GLenum pName, const float* params);
     // load png and JPG texture
     // only load ONCE.
     void load();        // generic load -> based off of extension ending...
-    void loadPNG();
+    void loadPNG(std::string filePath, bool flip);
     void loadJPG();
     // MANUAL LOADING
     void load_image();
