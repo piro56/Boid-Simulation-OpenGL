@@ -18,11 +18,11 @@ void Texture::setParameteri(GLenum pName, int param) {
     glTexParameteri(GL_TEXTURE_2D, pName, param );
 }
 
-void setParameterfv(GLenum pName, const float* params) {
+void Texture::setParameterfv(GLenum pName, const float* params) {
     glTexParameterfv(GL_TEXTURE_2D, pName, params);
 }
 
-void loadPNG(std::string filePath, bool flip) {
+void Texture::loadPNG(std::string filePath, bool flip) {
     int width, height, nrChannels;
     if(flip) {
         stbi_set_flip_vertically_on_load(true);

@@ -91,7 +91,7 @@ int main() {
     myTexture.setParameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     myTexture.setParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     std::string pngLocation = ShaderProgram::get_shader_file("imgs\\dvd.png");
-    myTexture.loadPNG(pngLocation, false);
+    myTexture.loadPNG(pngLocation, true);
 
     ShaderProgram myShader(ShaderProgram::get_shader_file("vertex\\dvd.vs"),
                           ShaderProgram::get_shader_file("fragment\\dvd.fs"));
