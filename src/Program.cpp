@@ -1,15 +1,23 @@
 #include <iostream>
-#include <math.h>
 #include <glad/glad.h>  // Manages function pointers
 #include <glfw3.h>      // Manages window
+
+#include <glm/glm.hpp>  // matrix math
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "stb_image.h" // image loading
+
+// My classes
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "ShaderProgram.h"
 #include "ElementBuffer.h"
+#include "Texture.h"
+
 #include <windows.h>
 #include <filesystem>
-#include "stb_image.h"
-#include "Texture.h"
+#include <math.h>
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow *window);
 
@@ -79,7 +87,14 @@ int main() {
 
     Texture myTexture = Texture(GL_TEXTURE0);
     myTexture.bindEnable();
+
+    // TEXTURE LOADING 
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
+    glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
     //              texture type, axis, wrapping option
     float borderColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
     myTexture.setParameteri(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
@@ -94,7 +109,7 @@ int main() {
     myTexture.loadPNG(pngLocation, true);
 
     ShaderProgram myShader(ShaderProgram::get_shader_file("vertex\\dvd.vs"),
-                          ShaderProgram::get_shader_file("fragment\\dvd.fs"));
+                           ShaderProgram::get_shader_file("fragment\\dvd.fs"));
 /*     ShaderProgram myShader("C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.vs",
                            "C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.fs"); */
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
