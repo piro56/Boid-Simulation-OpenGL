@@ -55,6 +55,52 @@ int main() {
     // When window is resized -> call frambuffer_size_callback.
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+
+    float vertices[] = {
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+        
+        -0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+        0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+        0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 0.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+    
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 9.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+    };
+
+    /*
     // Two triangles
     float vertices[] = {
     // positions          // colors           // texture coords
@@ -63,6 +109,7 @@ int main() {
     -0.25f, -0.25f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
     -0.25f,  0.25f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left
     };
+    */
     unsigned int indices[] = {
     0, 1, 3, // first triangle
     1, 2, 3  // second triangle
@@ -75,15 +122,15 @@ int main() {
     EBO.bind();
     EBO.setData(sizeof(indices), indices, GL_STATIC_DRAW);
     VBO.setBufferData(sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // position attribute
-    VBO.setVertexAttributePointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) 0);
+    // position attribute, stride of 5 floats
+    VBO.setVertexAttributePointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) 0);
     VBO.enableAttribArray(0);
     // color attribute
-    VBO.setVertexAttributePointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    VBO.enableAttribArray(1);
+    //VBO.setVertexAttributePointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    //VBO.enableAttribArray(1);
     // texture coordinates...
-    VBO.setVertexAttributePointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    VBO.enableAttribArray(2);
+    VBO.setVertexAttributePointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    VBO.enableAttribArray(1);
 
     Texture myTexture = Texture(GL_TEXTURE0);
     myTexture.bindEnable();
@@ -96,7 +143,7 @@ int main() {
 
 
     //              texture type, axis, wrapping option
-    float borderColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    float borderColor[] = { 0.0f, 0.2f, 0.0f, 0.0f };
     myTexture.setParameteri(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     myTexture.setParameteri(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     myTexture.setParameterfv(GL_TEXTURE_BORDER_COLOR, borderColor);
@@ -107,24 +154,31 @@ int main() {
     myTexture.setParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     std::string pngLocation = ShaderProgram::get_shader_file("imgs\\awesomeface.png");
     myTexture.loadPNG(pngLocation, true);
-
+    Texture crateTexture = Texture(GL_TEXTURE1);
+    crateTexture.bindEnable();
+    crateTexture.setParameteri(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    crateTexture.setParameteri(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    crateTexture.setParameterfv(GL_TEXTURE_BORDER_COLOR, borderColor);
+    crateTexture.setParameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    crateTexture.setParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    crateTexture.loadJPG(ShaderProgram::get_shader_file("imgs\\container.jpg"), false);
     ShaderProgram myShader(ShaderProgram::get_shader_file("vertex\\matting.vs"),
                            ShaderProgram::get_shader_file("fragment\\matting.fs"));
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     myShader.use();
     myShader.setInt("texture1", 0);
+    myShader.setInt("texture2", 1);
 
-
-    // GLM
-    glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);     
-    // ROTATE AND SCALE.
+    // GLM     
     /*
+    // ROTATE AND SCALE.
     glm::mat4 trans = glm::mat4(1.0f);
     trans = glm::rotate(trans, glm::radians(90.f), glm::vec3(0.0, 0.0, 1.0));
-    trams = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+    trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+    myShader.setMatrix4f("transform", false, glm::value_ptr(trans));
     */
-
     /* TRANSLATION
+    //glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
     glm::mat4 trans = glm::mat4(1.0f);          // identity matrix with diagonols set to 1.0f
     trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));    // create the translation matrix. Translating X and Y 
     vec = trans * vec;  // Apply transformation to vec
@@ -136,15 +190,40 @@ int main() {
     while(!glfwWindowShouldClose(window))
     {
         process_input(window);
-        glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.2f, 0.4f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
         float timeValue = glfwGetTime();
         double offsetValue = cos(timeValue);
         double offsetValueTwo = sin(timeValue);
-        myTexture.bindEnable();
+        
+        //myTexture.bindEnable();
+        crateTexture.bindEnable();
         VAO.bind();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         myShader.use();
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);        // identity matrix
+        glm::mat4 projection = glm::mat4(1.0);
+        projection = glm::perspective(glm::radians(45.0f), (float) SCREEN_WIDTH / (float) SCREEN_HEIGHT, 0.1f, 100.0f);
+        view = glm::translate(view, glm::vec3(0.0, 0.0f, -3.0f));
+        myShader.setMatrix4f("projection", false, glm::value_ptr(projection));
+        myShader.setMatrix4f("view",  false, glm::value_ptr(view));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(20.0f * ((float) offsetValue + 2.0f)), glm::vec3(1.0f, 0.3f, 0.5f));
+        myShader.setMatrix4f("model", false, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+
+        /*
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(offsetValueTwo, offsetValue, 0.0f));
+        trans = glm::rotate(trans, (float) timeValue, glm::vec3(1.0, 0.0, 0.0));
+        trans = glm::scale(trans, glm::vec3(0.5f, (offsetValue + 2)/2, 0.5f));
+        myShader.setMatrix4f("transform", false, glm::value_ptr(trans));
+        */
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        //myShader.use();
         //myShader.setVec2Float("dvdOffset", offsetValue, offsetValueTwo);
         glBindVertexArray(0);
 

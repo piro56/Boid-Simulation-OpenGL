@@ -24,9 +24,9 @@ public:
     // only load ONCE.
     void load();        // generic load -> based off of extension ending...
     void loadPNG(std::string filePath, bool flip);
-    void loadJPG();
+    void loadJPG(std::string filePath, bool flip);
     // MANUAL LOADING
-    void load_image();
+    void load_image(std::string filePath, bool flip);
     void tex_image_2D();
 
     // Enabling and setting active.
