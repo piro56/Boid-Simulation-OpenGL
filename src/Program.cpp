@@ -105,16 +105,32 @@ int main() {
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     myTexture.setParameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     myTexture.setParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    std::string pngLocation = ShaderProgram::get_shader_file("imgs\\dvd.png");
+    std::string pngLocation = ShaderProgram::get_shader_file("imgs\\awesomeface.png");
     myTexture.loadPNG(pngLocation, true);
 
-    ShaderProgram myShader(ShaderProgram::get_shader_file("vertex\\dvd.vs"),
-                           ShaderProgram::get_shader_file("fragment\\dvd.fs"));
-/*     ShaderProgram myShader("C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.vs",
-                           "C:\\Users\\epicp\\Documents\\Programming\\OpenGL-Playground\\src\\shaders\\default.fs"); */
+    ShaderProgram myShader(ShaderProgram::get_shader_file("vertex\\matting.vs"),
+                           ShaderProgram::get_shader_file("fragment\\matting.fs"));
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     myShader.use();
     myShader.setInt("texture1", 0);
+
+
+    // GLM
+    glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);     
+    // ROTATE AND SCALE.
+    /*
+    glm::mat4 trans = glm::mat4(1.0f);
+    trans = glm::rotate(trans, glm::radians(90.f), glm::vec3(0.0, 0.0, 1.0));
+    trams = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+    */
+
+    /* TRANSLATION
+    glm::mat4 trans = glm::mat4(1.0f);          // identity matrix with diagonols set to 1.0f
+    trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));    // create the translation matrix. Translating X and Y 
+    vec = trans * vec;  // Apply transformation to vec
+    std::cout << vec.x << " " << vec.y << " " << vec.z << std::endl;
+    */
+
 
     // Render loop
     while(!glfwWindowShouldClose(window))
@@ -123,13 +139,13 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         float timeValue = glfwGetTime();
-        float offsetValue = sin(timeValue) / 2.0f;
-        float offsetValueTwo = cos(timeValue) / 2.0f;
+        double offsetValue = cos(timeValue);
+        double offsetValueTwo = sin(timeValue);
         myTexture.bindEnable();
         VAO.bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         myShader.use();
-        myShader.setVec2Float("dvdOffset", offsetValue, offsetValueTwo);
+        //myShader.setVec2Float("dvdOffset", offsetValue, offsetValueTwo);
         glBindVertexArray(0);
 
         //glDrawArrays(GL_TRIANGLES, 0, 3);
