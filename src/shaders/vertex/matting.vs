@@ -6,15 +6,14 @@ layout (location = 1) in vec2 aTexCoord;
 //out vec3 ourColor;
 out vec2 TexCoord;
 out vec4 ourPosition;
-uniform vec2 dvdOffset;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
 void main()
 {
-	gl_Position = projection * view * model * vec4(aPos.x + dvdOffset.x , aPos.y + dvdOffset.y, aPos.z, 1.0);
+	gl_Position = projection * view * model * vec4(aPos, 1.0);
 	//ourColor = aColor;
-	TexCoord = vec2(aTexCoord.x + aPos.x, aTexCoord.y + aPos.y);
+	TexCoord = vec2(aTexCoord.x, 1.0 - aTexCoord.y);
     ourPosition = gl_Position;
 }
