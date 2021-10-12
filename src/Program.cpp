@@ -166,7 +166,7 @@ float vertices[] = {
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     myTexture.setParameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     myTexture.setParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    std::string pngLocation = ShaderProgram::get_shader_file("imgs\\awesomeface.png");
+    std::string pngLocation = ShaderProgram::get_shader_file("imgs\\dvd.png");
     myTexture.loadPNG(pngLocation, true);
     Texture crateTexture = Texture(GL_TEXTURE1);
     crateTexture.bindEnable();
@@ -217,6 +217,7 @@ float vertices[] = {
         myShader.use();
         glm::mat4 view = glm::mat4(1.0f);        // identity matrix
         glm::mat4 projection = glm::mat4(1.0);
+        // set the perspective to 
         projection = glm::perspective(glm::radians(45.0f), (float) SCREEN_WIDTH / (float) SCREEN_HEIGHT, 0.1f, 100.0f);
         view = glm::translate(view, glm::vec3(0.0, 0.0f, -3.0f));
         myShader.setMatrix4f("projection", false, glm::value_ptr(projection));
