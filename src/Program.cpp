@@ -177,9 +177,7 @@ float vertices[] = {
     crateTexture.setParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     crateTexture.loadJPG(ShaderProgram::get_shader_file("imgs\\container.jpg"), false);
     ShaderProgram myShader(ShaderProgram::get_shader_file("vertex\\matting.vs"),
-                           ShaderProgram::get_shader_file("fragment\\matting.fs"));
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    myShader.use();
+                           ShaderProgram::get_shader_file("fragment\\matting.fs"));    myShader.use();
     myShader.setInt("texture1", 0);
     myShader.setInt("texture2", 1);
 
@@ -198,8 +196,22 @@ float vertices[] = {
     vec = trans * vec;  // Apply transformation to vec
     std::cout << vec.x << " " << vec.y << " " << vec.z << std::endl;
     */
+    
+    // CAMERA
+    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);   // negate the vector, normalize
+
+    // up vector, then get cross products for x, y
+    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 cameraRight = glm::cross(up, cameraDirection);
+    glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+    const float radius = 10.0f;
 
 
+
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // Render loop
     while(!glfwWindowShouldClose(window))
     {
@@ -215,17 +227,22 @@ float vertices[] = {
         crateTexture.bindEnable();
         VAO.bind();
         myShader.use();
-        glm::mat4 view = glm::mat4(1.0f);        // identity matrix
+        glm::mat4 view;
+        view = glm::lookAt(
+                       glm::vec3(offsetValue * radius , 0.0f, offsetValueTwo * radius), 
+                       glm::vec3(0.0f, 0.0f, 0.0f),
+                       glm::vec3(0.0f, 1.0f, 0.0f));
         glm::mat4 projection = glm::mat4(1.0);
-        // set the perspective to 
+        // set the perspective to fov 45, aspect ratio, and the rendering of near/far.
         projection = glm::perspective(glm::radians(45.0f), (float) SCREEN_WIDTH / (float) SCREEN_HEIGHT, 0.1f, 100.0f);
+        // move the scene back. (everything we're drawing.)
         view = glm::translate(view, glm::vec3(0.0, 0.0f, -3.0f));
         myShader.setMatrix4f("projection", false, glm::value_ptr(projection));
         myShader.setMatrix4f("view",  false, glm::value_ptr(view));
         for(unsigned int i = 0; i < 10; i++) {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, cubePositions[i]);
-        model = glm::rotate(model, glm::radians((20.0f * (i+1)) * (offsetValue + 2.0f) / 2.0f), glm::vec3(1.0f, 0.3f, 0.5f));
+        model = glm::rotate(model, glm::radians((20.0f * (i+1))), glm::vec3((offsetValue + 2.0f) / 2.0f, 0.3f, 0.5f));
         myShader.setMatrix4f("model", false, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
         
