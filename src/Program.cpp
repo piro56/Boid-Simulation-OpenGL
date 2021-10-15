@@ -211,17 +211,22 @@ float vertices[] = {
 
 
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // Render loop
     while(!glfwWindowShouldClose(window))
     {
         process_input(window);
-        glClearColor(0.2f, 0.4f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
         float timeValue = glfwGetTime();
         float offsetValue = cos(timeValue);
-        double offsetValueTwo = sin(timeValue);
+        float offsetValueTwo = sin(timeValue);
+        float offsetValueThree= tan(timeValue);
+        float normalizedOffsetValue = (offsetValue + 2) / 2;
+        float normalizedOffsetValueTwo = (offsetValueTwo + 2) / 2;
+        float normalizedTan = (offsetValueThree + 2) / 2;
+        
+        glClearColor(normalizedOffsetValueTwo, normalizedOffsetValueTwo, normalizedOffsetValue, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
         
         myTexture.bindEnable();
         crateTexture.bindEnable();
