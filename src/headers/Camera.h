@@ -14,11 +14,11 @@ enum Camera_Movement {
 
 class Camera {
 private:
-    static const float YAW = -90.0f;
-    static const float PITCH = 0.0f;
-    static const float SPEED =  2.5f;
-    static const float SENSITIVITY = 0.1f;
-    static const float ZOOM = 45.0f;
+    static constexpr float YAW = -90.0f;
+    static constexpr float PITCH = 0.0f;
+    static constexpr float SPEED =  2.5f;
+    static constexpr float SENSITIVITY = 0.1f;
+    static constexpr float ZOOM = 45.0f;
 
 public: 
     // Camera Attributes
@@ -39,9 +39,14 @@ public:
 
     // Constructor
     Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
-    void update();
-    void lookat();
+    Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch);
+    
+    // Functions
+    glm::mat4 getViewMatrix(); 
+
+    void ProcessMouseMovement(float xOff, float yOff, GLboolean constrainPitch);
+private:
+    void updateCameraVectors();
 
 
-
-}
+};
