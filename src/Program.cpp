@@ -13,16 +13,29 @@
 #include "ShaderProgram.h"
 #include "ElementBuffer.h"
 #include "Texture.h"
+#include "Camera.h"
 
 #include <windows.h>
 #include <filesystem>
 #include <math.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xPos, double yPos);
 void process_input(GLFWwindow *window);
+void mouse_scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
+
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+float lastX = SCREEN_WIDTH / 2.0f;
+float lastY = SCREEN_HEIGHT / 2.0f;
+bool firstMouse = true;
+bool cursor = false;
+// timing
+float deltaTime = 0.0f;
+float lastFrame = 0.0f; 
+
 
 int main() {
     // Initialize and configure GLFW -> Set the version &
@@ -54,6 +67,9 @@ int main() {
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     // When window is resized -> call frambuffer_size_callback.
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, mouse_scroll_callback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
 float vertices[] = {
@@ -133,8 +149,8 @@ float vertices[] = {
     VBO.bind();
     ElementBuffer EBO;
     EBO.bind();
-    EBO.setData(sizeof(indices), indices, GL_STATIC_DRAW);
-    VBO.setBufferData(sizeof(vertices), vertices, GL_STATIC_DRAW);
+    EBO.setData(sizeof(indices), indices, GL_DYNAMIC_DRAW);
+    VBO.setBufferData(sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
     // position attribute, stride of 5 floats
     VBO.setVertexAttributePointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) 0);
     VBO.enableAttribArray(0);
@@ -199,15 +215,14 @@ float vertices[] = {
     
     // CAMERA
     glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);   // negate the vector, normalize
-
+    //glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+    //glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);   // negate the vector, normalize
     // up vector, then get cross products for x, y
     glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-    glm::vec3 cameraRight = glm::cross(up, cameraDirection);
-    glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+    //glm::vec3 cameraRight = glm::cross(up, cameraDirection);
+    //glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
     const float radius = 1.0f;
-
+    
 
 
 
@@ -215,40 +230,45 @@ float vertices[] = {
     // Render loop
     while(!glfwWindowShouldClose(window))
     {
+        // per frame logic
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        // input
         process_input(window);
-        float timeValue = glfwGetTime();
-        float offsetValue = cos(timeValue);
-        float offsetValueTwo = sin(timeValue);
-        float offsetValueThree= tan(timeValue);
+
+        // offsets
+        float offsetValue = cos(currentFrame);
+        float offsetValueTwo = sin(currentFrame);
         float normalizedOffsetValue = (offsetValue + 2) / 2;
         float normalizedOffsetValueTwo = (offsetValueTwo + 2) / 2;
-        float normalizedTan = (offsetValueThree + 2) / 2;
         
-        glClearColor(normalizedOffsetValueTwo, normalizedOffsetValueTwo, normalizedOffsetValue, 1.0f);
+        // render
+        glClearColor(0.4f, 0.1f, 0.8f, 1.0f);
+        //glClearColor(normalizedOffsetValueTwo, normalizedOffsetValueTwo, normalizedOffsetValue, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        
+        // bind textures and shaders
         myTexture.bindEnable();
         crateTexture.bindEnable();
-        VAO.bind();
         myShader.use();
-        glm::mat4 view;
-        view = glm::lookAt(
-                       glm::vec3(offsetValue * radius , 0.0f, offsetValueTwo * radius), 
-                       glm::vec3(0.0f, 0.0f, -3.0f),
-                       glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 view = camera.getViewMatrix();
         glm::mat4 projection = glm::mat4(1.0);
-        // set the perspective to fov 45, aspect ratio, and the rendering of near/far.
-        projection = glm::perspective(glm::radians(45.0f), (float) SCREEN_WIDTH / (float) SCREEN_HEIGHT, 0.1f, 100.0f);
+
+        VAO.bind();
+        // set the perspective to camera fov, aspect ratio, and the rendering of near/far.
+        projection = glm::perspective(glm::radians(camera.Zoom), (float) SCREEN_WIDTH / (float) SCREEN_HEIGHT, 0.1f, 100.0f);
         // move the scene back. (everything we're drawing.)
-        view = glm::translate(view, glm::vec3(0.0, 0.0f, -3.0f));
         myShader.setMatrix4f("projection", false, glm::value_ptr(projection));
         myShader.setMatrix4f("view",  false, glm::value_ptr(view));
-        for(unsigned int i = 0; i < 10; i++) {
+        
+        for (unsigned int i = 0; i < 10; i++) {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, cubePositions[i]);
         model = glm::rotate(model, glm::radians((20.0f * (i+1))), glm::vec3((offsetValue + 2.0f) / 2.0f, 0.3f, 0.5f));
         myShader.setMatrix4f("model", false, glm::value_ptr(model));
+        
         glDrawArrays(GL_TRIANGLES, 0, 36);
         
         }
@@ -280,11 +300,30 @@ float vertices[] = {
 void process_input(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, true);
-    }
+        cursor = !cursor;
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED - (2 * cursor));
+
+        //glfwSetWindowShouldClose(window, true);
+    } 
 }
 // When user resizes window, resize the window in OpenGL to the new width and height
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
+    if (firstMouse) {
+        lastX = xPos;
+        lastY = yPos;
+        firstMouse = false; 
+    }
+    float xOff = xPos - lastX;
+    float yOff = lastY - yPos;  // reversed since Ycoordinates go top to bottom
+
+    camera.ProcessMouseMovement(xOff, yOff, true);
+}
+
+void mouse_scroll_callback(GLFWwindow* window, double xOffset, double yOffset) {
+    camera.ProcessMouseScroll(yOffset);
 }

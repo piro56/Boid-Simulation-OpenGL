@@ -17,7 +17,7 @@ private:
     static constexpr float YAW = -90.0f;
     static constexpr float PITCH = 0.0f;
     static constexpr float SPEED =  2.5f;
-    static constexpr float SENSITIVITY = 0.1f;
+    static constexpr float SENSITIVITY = 0.001f;
     static constexpr float ZOOM = 45.0f;
 
 public: 
@@ -38,13 +38,23 @@ public:
 
 
     // Constructor
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), 
+               float yaw = YAW, float pitch = PITCH) 
+               : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+    {
+        Position = position;
+        WorldUp = up;
+        Yaw = yaw;
+        Pitch = pitch;
+        updateCameraVectors();
+    };
     Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
-    Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch);
     
     // Functions
     glm::mat4 getViewMatrix(); 
 
     void ProcessMouseMovement(float xOff, float yOff, GLboolean constrainPitch);
+    void ProcessMouseScroll(float yOff);
 private:
     void updateCameraVectors();
 
