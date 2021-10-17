@@ -11,3 +11,6 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
     this->Pitch = pitch;
 }
 
+void Camera::updateCameraVectors() {
+    
+}
