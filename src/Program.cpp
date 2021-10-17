@@ -206,7 +206,7 @@ float vertices[] = {
     glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
     glm::vec3 cameraRight = glm::cross(up, cameraDirection);
     glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-    const float radius = 10.0f;
+    const float radius = 1.0f;
 
 
 
@@ -235,7 +235,7 @@ float vertices[] = {
         glm::mat4 view;
         view = glm::lookAt(
                        glm::vec3(offsetValue * radius , 0.0f, offsetValueTwo * radius), 
-                       glm::vec3(0.0f, 0.0f, 0.0f),
+                       glm::vec3(0.0f, 0.0f, -3.0f),
                        glm::vec3(0.0f, 1.0f, 0.0f));
         glm::mat4 projection = glm::mat4(1.0);
         // set the perspective to fov 45, aspect ratio, and the rendering of near/far.

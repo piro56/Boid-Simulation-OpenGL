@@ -17,7 +17,7 @@
 				"${workspaceRoot}/src/source/ElementBuffer.cpp",
 				"${workspaceRoot}/src/source/Texture.cpp",
 				// PROJECT DEPENDENCIES
-
+				"${workspaceRoot}/src/source/Camera.cpp",
 				"${workspaceRoot}/src/projects/dvdbouncer/DVD.cpp",
 				
 				

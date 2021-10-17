@@ -14,10 +14,11 @@ enum Camera_Movement {
 
 class Camera {
 private:
-    const float YAW = -90.0f;
-    const float PITCH = 0.0f;
-    const float SENSITIVITY = 0.1f;
-    const float ZOOM = 45.0f;
+    static const float YAW = -90.0f;
+    static const float PITCH = 0.0f;
+    static const float SPEED =  2.5f;
+    static const float SENSITIVITY = 0.1f;
+    static const float ZOOM = 45.0f;
 
 public: 
     // Camera Attributes
@@ -34,6 +35,12 @@ public:
     float MovementSpeed;
     float MouseSensitivity;
     float Zoom;
+
+
+    // Constructor
+    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
+    void update();
+    void lookat();
 
 
 
