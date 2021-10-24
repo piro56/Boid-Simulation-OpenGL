@@ -240,9 +240,9 @@ float vertices[] = {
 
         // offsets
         float offsetValue = cos(currentFrame);
-        float offsetValueTwo = sin(currentFrame);
+        //float offsetValueTwo = sin(currentFrame);
         float normalizedOffsetValue = (offsetValue + 2) / 2;
-        float normalizedOffsetValueTwo = (offsetValueTwo + 2) / 2;
+        //float normalizedOffsetValueTwo = (offsetValueTwo + 2) / 2;
         
         // render
         glClearColor(0.4f, 0.1f, 0.8f, 1.0f);
@@ -320,7 +320,8 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
     }
     float xOff = xPos - lastX;
     float yOff = lastY - yPos;  // reversed since Ycoordinates go top to bottom
-
+    lastX = xPos;
+    lastY = yPos;
     camera.ProcessMouseMovement(xOff, yOff, true);
 }
 
