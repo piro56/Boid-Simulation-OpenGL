@@ -143,6 +143,15 @@ int main() {
     return 0;
 }
 
+void processMovement(float& x, float& y, float& angle) {
+    // angle is the direction of velocity, 0 is straight right, pi is left, 3/2pi is down etc..
+    if (x == 1.0 || x == -1.0 || y == 1.0 || y == -1.0) {
+        // calculate angle
+        // TODO: replace with pi. 
+        angle = (3.14 / 2) - angle + 3.14; // 90 - angle + 180
+    }
+}
+
 void process_input(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {

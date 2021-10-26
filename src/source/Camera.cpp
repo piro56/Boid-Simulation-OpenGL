@@ -54,3 +54,17 @@ void Camera::ProcessMouseScroll(float yOff) {
         Zoom = 90.0f;
     }
 }
+
+void Camera::ProcessKeyboardMovement(Camera_Movement direction, float deltaTime) {
+    float velocity = this->MovementSpeed * deltaTime;
+    if (direction == FORWARD) {
+        Position += Front * velocity; 
+    } else if (direction == BACKWARD) {
+        Position -= Front * velocity;
+    } else if (direction == LEFT) {
+        Position -= Right * velocity;
+    } else if (direction == RIGHT) {
+        Position += Right * velocity;
+    }
+
+}

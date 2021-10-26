@@ -245,7 +245,7 @@ float vertices[] = {
         //float normalizedOffsetValueTwo = (offsetValueTwo + 2) / 2;
         
         // render
-        glClearColor(0.4f, 0.1f, 0.8f, 1.0f);
+        glClearColor(0.4f, (offsetValue + 1 / 2.0f), 0.8f, 1.0f);
         //glClearColor(normalizedOffsetValueTwo, normalizedOffsetValueTwo, normalizedOffsetValue, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
@@ -299,12 +299,23 @@ float vertices[] = {
 
 void process_input(GLFWwindow *window)
 {
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         cursor = !cursor;
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED - (2 * cursor));
-
         //glfwSetWindowShouldClose(window, true);
     } 
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        camera.ProcessKeyboardMovement(Camera_Movement::FORWARD, deltaTime);
+    }
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+        camera.ProcessKeyboardMovement(Camera_Movement::BACKWARD, deltaTime);
+    }
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        camera.ProcessKeyboardMovement(Camera_Movement::LEFT, deltaTime);
+    }
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+        camera.ProcessKeyboardMovement(Camera_Movement::RIGHT, deltaTime);
+    }
 }
 // When user resizes window, resize the window in OpenGL to the new width and height
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
