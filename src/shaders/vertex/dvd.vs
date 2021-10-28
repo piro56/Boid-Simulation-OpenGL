@@ -6,10 +6,11 @@ layout (location = 2) in vec2 aTexCoord;
 out vec3 ourColor;
 out vec2 TexCoord;
 out vec4 ourPosition;
+uniform vec2 dvdOffset;
 
 void main()
 {
-	gl_Position = vec4(aPos.x , aPos.y, aPos.z, 1.0);
+	gl_Position = vec4(aPos.x + dvdOffset.x , aPos.y + dvdOffset.y, aPos.z, 1.0);
 	ourColor = aColor;
 	TexCoord = vec2(aTexCoord.x + aPos.x, aTexCoord.y + aPos.y);
     ourPosition = gl_Position;

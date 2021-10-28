@@ -42,7 +42,7 @@ void Texture::loadPNG(std::string filePath, bool flip) {
     unsigned char *data = stbi_load(filePath.c_str(),
                           &width, &height, &nrChannels, 4);
     if(data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, 
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA12, width, 
         height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {

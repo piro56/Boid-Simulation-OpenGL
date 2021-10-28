@@ -17,10 +17,14 @@
 #include <windows.h>
 #include <filesystem>
 #include <math.h>
+#include <cstdlib>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow *window);
-
+void processMovement(float& x, float& y, float& dx, float& dy, 
+                     float& angle, float xBorder, float yBorder, 
+                     float& r, float &g, float& b);
+float randomColor();
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
@@ -31,7 +35,6 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
     // Create window object.
     GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
@@ -116,6 +119,15 @@ int main() {
     myShader.use();
     myShader.setInt("texture1", 0);
 
+    srand(time(NULL));
+    float dx = 0.0125;
+    float dy = -0.01;
+    float angle = 0.55;
+    float xValue = 0.34 + dx;
+    float yValue = 0.02 + dy;
+    float dvdRed = 0.2;
+    float dvdBlue = 0.6;
+    float dvdGreen = 0.1;
     // Render loop
     while(!glfwWindowShouldClose(window))
     {
@@ -123,13 +135,17 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         float timeValue = glfwGetTime();
-        float offsetValue = sin(timeValue) / 2.0f;
+        float offsetValue = 0.0 + dx;
         float offsetValueTwo = cos(timeValue) / 2.0f;
         myTexture.bindEnable();
         VAO.bind();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         myShader.use();
-        myShader.setVec2Float("dvdOffset", offsetValue, offsetValueTwo);
+        xValue += dx;
+        yValue += dy;
+        myShader.setVec2Float("dvdOffset", xValue, yValue);
+        myShader.setVec3Float("dvdRGB", dvdRed, dvdGreen, dvdBlue);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        processMovement(xValue, yValue, dx, dy, angle, 0.15f, 0.15f, dvdRed, dvdGreen, dvdBlue);
         glBindVertexArray(0);
 
         //glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -143,15 +159,24 @@ int main() {
     return 0;
 }
 
-void processMovement(float& x, float& y, float& angle) {
+void processMovement(float& x, float& y, float& dx, float& dy, float& angle, float xBorder, float yBorder, float& r, float &g, float& b) {
     // angle is the direction of velocity, 0 is straight right, pi is left, 3/2pi is down etc..
-    if (x == 1.0 || x == -1.0 || y == 1.0 || y == -1.0) {
-        // calculate angle
-        // TODO: replace with pi. 
-        angle = (3.14 / 2) - angle + 3.14; // 90 - angle + 180
+    if (x + xBorder >= 1.0 || x - xBorder <= -1.0) {
+        // random between 0 and 255
+        r = randomColor();
+        g = randomColor();
+        b = randomColor();
+        dx = -dx;
+    } else if (y  + yBorder >= 1.0 || y - yBorder <= -1.0) {
+        r = randomColor();
+        g = randomColor();
+        b = randomColor();
+        dy = -dy;
     }
 }
-
+float randomColor() {
+    return (rand() % 255 + 10) / 255.0f;
+}
 void process_input(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
