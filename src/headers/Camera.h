@@ -1,5 +1,4 @@
 #pragma once
-#include <glm/glm.hpp>
 #include <glad/glad.h>  // Manages function pointers
 #include <glm/glm.hpp>  // matrix math
 #include <glm/gtc/matrix_transform.hpp>
