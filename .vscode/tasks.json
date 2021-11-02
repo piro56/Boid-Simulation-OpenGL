@@ -16,7 +16,7 @@
 				"${workspaceRoot}/src/source/stb_image.cpp",
 				"${workspaceRoot}/src/source/ElementBuffer.cpp",
 				"${workspaceRoot}/src/source/Texture.cpp",
-				"${workspaceRoot}/src/Objects/Triangle.cpp",
+				"${workspaceRoot}/src/Objects/Source/Triangle.cpp",
 
 				// PROJECT DEPENDENCIES
 				"${workspaceRoot}/src/source/Camera.cpp",
@@ -27,6 +27,7 @@
 				"--std=c++17",
 				"-I${workspaceRoot}/src/projects/dvdbouncer",	// PROJECT
 				"-I${workspaceRoot}/src/Headers",
+				"-I${workspaceRoot}/src/Objects/2D",
 				"-I${workspaceRoot}/src/Objects",
 				"-I${workspaceRoot}/dependencies/GLFW/include",
 				"-I${workspaceFolder}/dependencies/GLAD/include",

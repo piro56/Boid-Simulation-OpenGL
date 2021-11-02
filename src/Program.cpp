@@ -83,7 +83,7 @@ int main() {
         triangles[i]->setColor(randomColor(), randomColor(), randomColor());
     }
     // Render loop
-    while(!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window))
     {
         process_input(window);
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
@@ -92,7 +92,7 @@ int main() {
         float offOne = (sin(timeValue)) / 2.0f;
         float offTwo = (cos(timeValue)) / 2.0f;
         int counter = 0;
-        for(Triangle* t : triangles) {
+        for (Triangle* t : triangles) {
             counter++;
             t->setPosition(offOne - counter / 1000.0f, offTwo - counter / 1000.0f);
             t->draw();
