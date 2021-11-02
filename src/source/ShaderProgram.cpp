@@ -53,6 +53,9 @@ void ShaderProgram::setVec4Float(const std::string &name, float value_one, float
 void ShaderProgram::setVec2Float(const std::string &name, float value_one, float value_two) const {
     glUniform2f(glGetUniformLocation(this->shaderProgramID, name.c_str()), value_one, value_two);
 }
+void ShaderProgram::setVec3Float(const std::string &name, float value_one, float value_two, float value_three) const {
+    glUniform3f(glGetUniformLocation(this->shaderProgramID, name.c_str()), value_one, value_two, value_three);
+}
 
 void ShaderProgram::setMatrix4f(const std::string &name, GLboolean transpose, const GLfloat* value) const {
     glUniformMatrix4fv(glGetUniformLocation(this->shaderProgramID, name.c_str()), 1, transpose, value);

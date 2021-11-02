@@ -28,6 +28,7 @@ public:
     void setInt(const std::string &name, int value) const;
     void setFloat(const std::string &name, float value) const;
     void setVec2Float(const std::string &name, float value_one, float value_two) const;
+    void setVec3Float(const std::string &name, float value_one, float value_two, float value_three) const;
     void setVec4Float(const std::string &name, float value_one, float value_two, float value_three, float value_four) const;
     void setMatrix4f(const std::string &name, GLboolean transpose, const GLfloat* value) const;
     inline static std::string getexepath() {
