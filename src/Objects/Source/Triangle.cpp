@@ -94,7 +94,7 @@ void Triangle::preDraw() {
     if (transUpdated){
     transform = glm::mat4(1.0f);
     transform = glm::translate(transform, glm::vec3(x, y, 0.0f));
-    transform = glm::rotate(transform, glm::radians(rotation), glm::vec3(0.0,0.0,1.0));
+    transform = glm::rotate(transform, rotation, glm::vec3(0.0,0.0,1.0));
     transform = glm::scale(transform, glm::vec3(scaleX, scaleY, scaleZ));
     this->shaderProgram->setMatrix4f("transform", GL_FALSE, glm::value_ptr(transform));
     }

@@ -79,8 +79,8 @@ int main() {
     float xValue = 0.14 + dx;
     float yValue = 0.02 + dy;
     std::vector<Fish*> triangles;
-    for (int i = 0; i < 500; i++) {
-        triangles.push_back(new Fish (0.02, 0.04, 0.01, 0.01));
+    for (int i = 0; i < 400; i++) {
+        triangles.push_back(new Fish (0.01, 0.03, &triangles));
         triangles[i]->setColor(randomColor(), randomColor(), randomColor());
     }
     // Render loop
@@ -94,8 +94,9 @@ int main() {
         float offTwo = (cos(timeValue)) / 2.0f;
         int counter = 0;
         for (Fish* t : triangles) {
-            counter++;
-            t->setPosition(offOne - counter / 1000.0f, offTwo - counter / 1000.0f);
+            t->processMovement();
+            //counter++;
+            //t->setPosition(t->getX() + (rand() % 3 - 1) * rand() % 200 / 20000.0f, t->getY() + (rand() % 3 - 1) * rand() % 200 / 20000.0f);
             t->draw();
         }
         // Swapping buffers reduces artifacts.

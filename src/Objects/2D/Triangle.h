@@ -14,7 +14,7 @@
 
 class Triangle {
 
-private:
+protected:
 VertexArray vao;
 VertexBuffer vbo[3]; // vertices, colors, texCoords
 GLenum usage = GL_DYNAMIC_DRAW;
