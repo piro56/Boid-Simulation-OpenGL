@@ -2,6 +2,10 @@
 #include <glad/glad.h>
 #include <iostream>
 
+#include <glm/glm.hpp>  // matrix math
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "ShaderProgram.h"
@@ -19,8 +23,14 @@ float colors[9];
 float texCoords[6];
 float x = 0.5;
 float y = 0.5;
+float scaleX = 1.0f;
+float scaleY = 1.0f;
+float scaleZ = 1.0f;
 float sizeX;
 float sizeY;
+float rotation = 0.0f;
+bool transUpdated = true;
+glm::mat4 transform;
 public:
     bool useShader = true;
     Texture* tex = nullptr;
@@ -34,6 +44,11 @@ public:
     void setTexture(Texture& t);    
     void setPosition(float x, float y);
     void setColor(float r, float g, float b);
+    void setRotation(float rotation);
+    void scale(float scaleX, float scaleY, float scaleZ);
+
+    void preDraw();
+
     inline float getX() {return x;}
     inline float getY() {return y;}
     inline float getSizeX() {return sizeX;}

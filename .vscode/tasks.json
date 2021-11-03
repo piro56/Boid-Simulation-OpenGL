@@ -17,6 +17,7 @@
 				"${workspaceRoot}/src/source/ElementBuffer.cpp",
 				"${workspaceRoot}/src/source/Texture.cpp",
 				"${workspaceRoot}/src/Objects/Source/Triangle.cpp",
+				"${workspaceRoot}/src/Objects/Source/Fish.cpp",
 
 				// PROJECT DEPENDENCIES
 				"${workspaceRoot}/src/source/Camera.cpp",

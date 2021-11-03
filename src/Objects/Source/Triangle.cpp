@@ -6,7 +6,7 @@ void Triangle::draw() {
         tex->bindEnable();
     }
     if (shaderProgram != nullptr && useShader) {
-        shaderProgram->use();
+        this->preDraw();
     }
     vao.bind();
     glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -36,8 +36,11 @@ Triangle::Triangle(float xSize, float ySize, bool useShader) {
     };
     initTriangle(triVertices, triColors, triTexCoords);
     if (useShader) {
+    this->transform = glm::mat4(1.0f);
+    //transform = glm::rotate(transform, 0.0f, glm::vec3(0.0, 0.0, 1.0));
+    transform = glm::translate(transform, glm::vec3(x, y, 0.0f));
     this->shaderProgram->use();
-    this->shaderProgram->setVec2Float("ourPosition", x, y);
+    this->shaderProgram->setMatrix4f("transform", 1, glm::value_ptr(transform));
     }
 }
 void Triangle::initTriangle(float* verticesArr, float* colorsArr, float* texCoordsArr) {
@@ -79,15 +82,44 @@ void Triangle::initTriangle(float* verticesArr, float* colorsArr, float* texCoor
     this->shaderProgram = s;
     }
 }
+
+// REORDER
+// POSITION -> ROTATION -> SCALE UPDATES VALUES (have a boolean check to update in predraw)
+// PREDRAW -> PERFORMS TRANSFORMATIONS, SETS UNIFORM
+
+void Triangle::setRotation(float rotation) {
+    this->rotation = rotation;
+}
+void Triangle::preDraw() {
+    if (transUpdated){
+    transform = glm::mat4(1.0f);
+    transform = glm::translate(transform, glm::vec3(x, y, 0.0f));
+    transform = glm::rotate(transform, glm::radians(rotation), glm::vec3(0.0,0.0,1.0));
+    transform = glm::scale(transform, glm::vec3(scaleX, scaleY, scaleZ));
+    this->shaderProgram->setMatrix4f("transform", GL_FALSE, glm::value_ptr(transform));
+    }
+    transUpdated = false;
+    this->shaderProgram->use();
+}
+void Triangle::scale(float scaleX, float scaleY, float scaleZ) {
+    this->scaleX = scaleX;
+    this->scaleY = scaleY;
+    this->scaleZ = scaleZ;
+    this->transUpdated = true;
+}
 void Triangle::setPosition(float x, float y) {
     this->x = x;
     this->y = y;
-    this->shaderProgram->use();
-    this->shaderProgram->setVec2Float("ourPosition", x, y);
+    transform = glm::mat4(1.0f);
+    transform = glm::translate(transform, glm::vec3(x, y, 0.0f));
+    this->transUpdated = true;
+
 }
 void Triangle::setTexture(Texture& t) {
     this->tex = &t;
 }
+
+
 void Triangle::setColor(float r, float g, float b) {
     this->shaderProgram->use();
     this->shaderProgram->setVec3Float("selectedColor", r, g, b);

@@ -14,6 +14,7 @@
 #include "ElementBuffer.h"
 #include "Texture.h"
 #include "Triangle.h"
+#include "Fish.h"
 
 #include <windows.h>
 #include <filesystem>
@@ -77,9 +78,9 @@ int main() {
     float angle = 0.95;
     float xValue = 0.14 + dx;
     float yValue = 0.02 + dy;
-    std::vector<Triangle*> triangles;
-    for (int i = 0; i < 100; i++) {
-        triangles.push_back(new Triangle (0.15, 0.3));
+    std::vector<Fish*> triangles;
+    for (int i = 0; i < 500; i++) {
+        triangles.push_back(new Fish (0.02, 0.04, 0.01, 0.01));
         triangles[i]->setColor(randomColor(), randomColor(), randomColor());
     }
     // Render loop
@@ -92,7 +93,7 @@ int main() {
         float offOne = (sin(timeValue)) / 2.0f;
         float offTwo = (cos(timeValue)) / 2.0f;
         int counter = 0;
-        for (Triangle* t : triangles) {
+        for (Fish* t : triangles) {
             counter++;
             t->setPosition(offOne - counter / 1000.0f, offTwo - counter / 1000.0f);
             t->draw();
