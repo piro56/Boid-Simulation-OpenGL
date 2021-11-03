@@ -59,6 +59,9 @@ void Fish::limitSpeed() {
 }
 
 void Fish::calculateAvoidance() {
+    float absX = abs(dx);   
+    float absY = abs(dy);
+    setColor(absX * 30 + 0.2, absX * absY * 10, absY * 30 + 0.2);
     float moveX = 0.0f;
     float moveY = 0.0f;
     for (Fish* f : *otherFishes) {

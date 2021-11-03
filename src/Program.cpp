@@ -27,8 +27,8 @@ void processMovement(float& x, float& y, float& dx, float& dy,
                      float& angle, float xBorder, float yBorder, 
                      float& r, float &g, float& b);
 float randomColor();
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 1920;
+const int SCREEN_HEIGHT = 1080;
 
 int main() {
     // Initialize and configure GLFW -> Set the version &
@@ -38,7 +38,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     // Create window object.
-    GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -81,13 +81,15 @@ int main() {
     std::vector<Fish*> triangles;
     for (int i = 0; i < 400; i++) {
         triangles.push_back(new Fish (0.01, 0.03, &triangles));
-        triangles[i]->setColor(randomColor(), randomColor(), randomColor());
+        triangles[i]->setColor(200 / 255.0f, 20.0f/255.0f, 20.0f/255.0f);
+
+        //triangles[i]->setColor(randomColor(), randomColor(), randomColor());
     }
     // Render loop
     while (!glfwWindowShouldClose(window))
     {
         process_input(window);
-        glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         float timeValue = glfwGetTime();
         float offOne = (sin(timeValue)) / 2.0f;
