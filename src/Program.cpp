@@ -36,8 +36,8 @@ int main() {
     // Initialize and configure GLFW -> Set the version &
     // set profile to CORE so we do not get backwards-compatible features.
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     // Create window object.
     GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", NULL, NULL);
@@ -80,6 +80,7 @@ int main() {
     float angle = 0.95;
     float xValue = 0.14 + dx;
     float yValue = 0.02 + dy;
+    
     std::vector<Fish*> triangles;
     for (int i = 0; i < 3200; i++) {
         triangles.push_back(new Fish (0.005, 0.01, &triangles));
