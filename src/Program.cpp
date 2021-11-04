@@ -21,12 +21,14 @@
 #include <math.h>
 #include <cstdlib>
 
+#include <thread>
+#include <atomic>
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow *window);
-void processMovement(float& x, float& y, float& dx, float& dy, 
-                     float& angle, float xBorder, float yBorder, 
-                     float& r, float &g, float& b);
+void process_Movement_Thread(std::vector<Fish*>& triangles, int begin, int end);                     
 float randomColor();
+std::atomic<bool> runThreads (true);
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
 
@@ -79,13 +81,21 @@ int main() {
     float xValue = 0.14 + dx;
     float yValue = 0.02 + dy;
     std::vector<Fish*> triangles;
-    for (int i = 0; i < 400; i++) {
-        triangles.push_back(new Fish (0.01, 0.03, &triangles));
+    for (int i = 0; i < 3200; i++) {
+        triangles.push_back(new Fish (0.005, 0.01, &triangles));
         triangles[i]->setColor(200 / 255.0f, 20.0f/255.0f, 20.0f/255.0f);
 
         //triangles[i]->setColor(randomColor(), randomColor(), randomColor());
     }
+    for (Fish* t : triangles) {
+            t->processMovement();
+        }
     // Render loop
+    std::thread threads[8];
+    for (int i = 0; i < 8; i ++) {
+        threads[i] = std::thread(process_Movement_Thread, 
+        std::ref(triangles), i * triangles.size() / 8, (i+1) * triangles.size() / 8);
+    }
     while (!glfwWindowShouldClose(window))
     {
         process_input(window);
@@ -96,7 +106,7 @@ int main() {
         float offTwo = (cos(timeValue)) / 2.0f;
         int counter = 0;
         for (Fish* t : triangles) {
-            t->processMovement();
+            //t->processMovement();
             //counter++;
             //t->setPosition(t->getX() + (rand() % 3 - 1) * rand() % 200 / 20000.0f, t->getY() + (rand() % 3 - 1) * rand() % 200 / 20000.0f);
             t->draw();
@@ -106,6 +116,10 @@ int main() {
         // Polls events like keyboard/mouse inputs.
         glfwPollEvents();
     }
+    runThreads = false;
+    for (int i = 0; i < 4; i++) {
+        threads[i].join();
+    }
     for (auto tri : triangles) {
         delete tri;
     }
@@ -113,21 +127,6 @@ int main() {
     return 0;
 }
 
-void processMovement(float& x, float& y, float& dx, float& dy, float& angle, float xBorder, float yBorder, float& r, float &g, float& b) {
-    // angle is the direction of velocity, 0 is straight right, pi is left, 3/2pi is down etc..
-    if (x + xBorder >= 1.0 || x - xBorder <= -1.0) {
-        // random between 0 and 255
-        r = randomColor();
-        g = randomColor();
-        b = randomColor();
-        dx = -dx;
-    } else if (y  + yBorder >= 1.0 || y - yBorder <= -1.0) {
-        r = randomColor();
-        g = randomColor();
-        b = randomColor();
-        dy = -dy;
-    }
-}
 float randomColor() {
     return (rand() % 255 + 10) / 255.0f;
 }
@@ -141,4 +140,12 @@ void process_input(GLFWwindow *window)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+void process_Movement_Thread(std::vector<Fish*>& triangles, int begin, int end) {
+    while(runThreads) {
+        for (volatile int i = begin; i < end; i++) {
+            triangles[i]->processMovement();
+        }
+    }
 }

@@ -32,7 +32,7 @@ void Fish::setPosition(float x, float y) {
 }
 
 void Fish::avoidWall(float x, float y) {
-    float wall = 0.97;
+    float wall = 0.99;
     if ( x < -wall + sizeX * scaleX) {
         dx += AVOID_WALL_STRENGTH;
     }
@@ -57,16 +57,19 @@ void Fish::limitSpeed() {
         dy = dy * (MIN_SPEED / speed);
     }
 }
-
-void Fish::calculateAvoidance() {
+void Fish::draw() {
     float absX = abs(dx);   
     float absY = abs(dy);
-    setColor(absX * 30 + 0.2, absX * absY * 10, absY * 30 + 0.2);
+    // can move this into the fragment shader!
+    setColor(absX * 30 + dx * dy + 0.5, absX * absY + x, absY * 30 + y);
+    Triangle::draw();
+}
+void Fish::calculateAvoidance() {
     float moveX = 0.0f;
     float moveY = 0.0f;
     for (Fish* f : *otherFishes) {
         float distance = sqrtf((f->x-x)*(f->x-x) + (f->y-y)*(f->y-y));
-        if (distance < AVOID_DIST_THRESHOLD) {
+        if (distance < AVOID_DIST_THRESHOLD * (sizeX + sizeY)) {
             moveX += x - f->x;
             moveY += y - f->y;
         }

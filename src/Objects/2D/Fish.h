@@ -15,10 +15,10 @@
 class Fish: public Triangle {
 private:
     constexpr static float AVOID_WALL_STRENGTH = 0.002;
-    constexpr static float AVOID_DIST_THRESHOLD = 0.1; 
-    constexpr static float AVOID_STRENGTH = 0.02;
-    constexpr static float MAX_SPEED = 0.02; 
-    constexpr static float MIN_SPEED = 0.0075;
+    constexpr static float AVOID_DIST_THRESHOLD = 1; 
+    constexpr static float AVOID_STRENGTH = 0.08;
+    constexpr static float MAX_SPEED = 0.01; 
+    constexpr static float MIN_SPEED = 0.00375;
 
     float dx = 0.01;
     float dy = 0.01;
@@ -34,6 +34,7 @@ public:
     Fish(float xSize, float ySize, std::vector<Fish*>* otherFishes);
     void processMovement();
     void setPosition(float x, float y);
+    void draw();
     static float angleBetween(float x1, float y1, float x2, float y2) {
         float dot = x1*x2 + y1*y2;
         float det = x1*y2 - y1*x2;
