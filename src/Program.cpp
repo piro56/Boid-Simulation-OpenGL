@@ -92,17 +92,19 @@ int main() {
             t->processMovement();
         }
     // Render loop
-    std::thread threads[8];
-    for (int i = 0; i < 8; i ++) {
+    #define NUM_THREADS 8
+    std::thread threads[NUM_THREADS];
+    for (int i = 0; i < NUM_THREADS; i ++) {
         threads[i] = std::thread(process_Movement_Thread, 
-        std::ref(triangles), i * triangles.size() / 8, (i+1) * triangles.size() / 8);
+        std::ref(triangles), i * triangles.size() / NUM_THREADS, (i+1) * triangles.size() / NUM_THREADS);
     }
+    float lastTimeValue = 0;
     while (!glfwWindowShouldClose(window))
     {
+        float timeValue = glfwGetTime();
         process_input(window);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        float timeValue = glfwGetTime();
         float offOne = (sin(timeValue)) / 2.0f;
         float offTwo = (cos(timeValue)) / 2.0f;
         int counter = 0;
@@ -118,7 +120,7 @@ int main() {
         glfwPollEvents();
     }
     runThreads = false;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < NUM_THREADS; i++) {
         threads[i].join();
     }
     for (auto tri : triangles) {
