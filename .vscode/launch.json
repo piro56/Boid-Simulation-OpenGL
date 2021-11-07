@@ -12,7 +12,7 @@
             "program": "${workspaceRoot}/builds/windows/Program.exe",
             //"program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [
-                "${workspaceRoot}/src/${file}",
+                "${workspaceRoot}/src/Program.cpp",
 				// Include all source files.
 				"${workspaceRoot}/dependencies/GLAD/src/glad.c",
 				// Include .cpp files here (These are for .h file code)

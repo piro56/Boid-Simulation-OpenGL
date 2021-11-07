@@ -14,8 +14,12 @@
 
 class Fish: public Triangle {
 private:
-    constexpr static float AVOID_WALL_STRENGTH = 0.002;
-    constexpr static float AVOID_DIST_THRESHOLD = 1; 
+    constexpr static float FOLLOW_STRENGTH = 0.05f;
+
+    constexpr static float CENTERING_RANGE = 0.025;
+    constexpr static float CENTERING_STRENGTH = 0.0005;
+    constexpr static float AVOID_WALL_STRENGTH = 0.0002;
+    constexpr static float AVOID_DIST_THRESHOLD = 0.05; 
     constexpr static float AVOID_STRENGTH = 0.08;
     constexpr static float MAX_SPEED = 0.01; 
     constexpr static float MIN_SPEED = 0.00375;
@@ -28,6 +32,7 @@ private:
     void avoidWall(float x, float y);
     void limitSpeed();
     void calculateAvoidance();
+    void calculateCentering();
 public:
     using Triangle::Triangle;
     Fish(float x, float y, float dx, float dy, std::vector<Fish*>* otherFishes);

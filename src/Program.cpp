@@ -82,15 +82,15 @@ int main() {
     float yValue = 0.02 + dy;
     
     std::vector<Fish*> triangles;
-    for (int i = 0; i < 3200; i++) {
+    for (int i = 0; i < 800; i++) {
         triangles.push_back(new Fish (0.005, 0.01, &triangles));
         triangles[i]->setColor(200 / 255.0f, 20.0f/255.0f, 20.0f/255.0f);
 
         //triangles[i]->setColor(randomColor(), randomColor(), randomColor());
     }
-    for (Fish* t : triangles) {
-            t->processMovement();
-        }
+    // for (Fish* t : triangles) {
+    //         t->processMovement();
+    // }
     // Render loop
     #define NUM_THREADS 8
     std::thread threads[NUM_THREADS];
@@ -110,7 +110,6 @@ int main() {
         int counter = 0;
         for (Fish* t : triangles) {
             //t->processMovement();
-            //counter++;
             //t->setPosition(t->getX() + (rand() % 3 - 1) * rand() % 200 / 20000.0f, t->getY() + (rand() % 3 - 1) * rand() % 200 / 20000.0f);
             t->draw();
         }
