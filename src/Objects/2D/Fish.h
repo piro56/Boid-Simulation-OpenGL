@@ -14,15 +14,15 @@
 
 class Fish: public Triangle {
 private:
-    constexpr static float FOLLOW_STRENGTH = 0.05f;
+    constexpr static float FOLLOW_STRENGTH = 0.005f;
 
-    constexpr static float CENTERING_RANGE = 0.025;
-    constexpr static float CENTERING_STRENGTH = 0.0005;
+    constexpr static float CENTERING_RANGE = 0.02f;
+    constexpr static float CENTERING_STRENGTH = 0.000005;
     constexpr static float AVOID_WALL_STRENGTH = 0.0002;
-    constexpr static float AVOID_DIST_THRESHOLD = 0.05; 
-    constexpr static float AVOID_STRENGTH = 0.08;
-    constexpr static float MAX_SPEED = 0.01; 
-    constexpr static float MIN_SPEED = 0.00375;
+    constexpr static float AVOID_DIST_THRESHOLD = 0.04; 
+    constexpr static float AVOID_STRENGTH = 0.0003;
+    constexpr static float MAX_SPEED = 0.001; 
+    constexpr static float MIN_SPEED = 0.000375;
 
     float dx = 0.01;
     float dy = 0.01;

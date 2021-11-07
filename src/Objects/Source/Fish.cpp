@@ -12,8 +12,8 @@ Fish::Fish(float x, float y, float dx, float dy, std::vector<Fish*>* otherFish)
 Fish::Fish(float xSize, float ySize, std::vector<Fish*>* otherFishes) 
             : Triangle::Triangle(xSize, ySize)
 {
-    this->setPosition((rand() % 3 - 1) * (rand() % 100) / 100.0f, 
-                      (rand() % 3 - 1) * (rand() % 100) / 100.0f);
+    this->setPosition((rand() % 3 - 1) * (rand() % 75) / 100.0f, 
+                      (rand() % 3 - 1) * (rand() % 75) / 100.0f);
     this->dx = (rand() % 3 - 1) * (rand() % 100) / 100.0f;
     this->dy = (rand() % 3 - 1) * (rand() % 100) / 100.0f;
     this->otherFishes = otherFishes;
@@ -43,6 +43,8 @@ void Fish::avoidWall(float x, float y) {
     if (abs(x) > 1.1 || abs(y) > 1.1) {
         x = 0.0;
         y = 0.0;
+        dx = MIN_SPEED;
+        dy = MIN_SPEED;
     }
 }
 
@@ -60,9 +62,9 @@ void Fish::draw() {
     float absX = abs(dx);   
     float absY = abs(dy);
     // can move this into the fragment shader!
-    setColor(0.2, 0.0, 0.6);
+    //setColor(0.2, 0.0, 0.6);
 
-    //setColor(absX * 30 + dx * dy + 0.5, absX * absY + x, absY * 30 + y);
+    setColor(absX * 30 + dx * dy + 0.5, absX * absY + x, absY * 30 + y);
     Triangle::draw();
 }
 
@@ -98,8 +100,8 @@ void Fish::calculateCentering() {
 
 void Fish::calculateAvoidance() {
     // match heading
-    float averagedX;
-    float averagedY;
+    float averagedX = 0.0f;
+    float averagedY = 0.0f;
 
     // centering
     float centerX = 0.0f;
@@ -113,7 +115,7 @@ void Fish::calculateAvoidance() {
     for (Fish* f : *otherFishes) {
         float distance = sqrtf((f->x-x)*(f->x-x) + (f->y-y)*(f->y-y));
         // avoidance
-        if (distance < AVOID_DIST_THRESHOLD * (sizeX + sizeY)) {
+        if (distance < AVOID_DIST_THRESHOLD) {
             moveX += x - f->x;
             moveY += y - f->y;
         }
@@ -136,10 +138,8 @@ void Fish::calculateAvoidance() {
         dy += (centerY - y) * CENTERING_STRENGTH;
         
         // Heading
-        if (dx < MAX_SPEED && dy < MAX_SPEED) {
         dx += ((averagedX - dx) * FOLLOW_STRENGTH);
         dy += ((averagedY - dy) * FOLLOW_STRENGTH);
-        }
     }
     // avoidance
     dx += moveX * AVOID_STRENGTH;
