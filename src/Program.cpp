@@ -31,7 +31,10 @@ float randomColor();
 std::atomic<bool> runThreads (true);
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
-
+FishSettings fs = {
+    .0005, 0.01, 0.000005, 0.00002, 0.04, 0.005, 0.001, 0.000375
+};
+FishSettings& Fish::FISH_SETTINGS = fs;
 int main() {
     // Initialize and configure GLFW -> Set the version &
     // set profile to CORE so we do not get backwards-compatible features.
@@ -82,7 +85,7 @@ int main() {
     float yValue = 0.02 + dy;
     
     std::vector<Fish*> triangles;
-    for (int i = 0; i < 800; i++) {
+    for (int i = 0; i < 1600; i++) {
         triangles.push_back(new Fish (0.005, 0.01, &triangles));
         triangles[i]->setColor(200 / 255.0f, 20.0f/255.0f, 20.0f/255.0f);
 
@@ -99,6 +102,16 @@ int main() {
         std::ref(triangles), i * triangles.size() / NUM_THREADS, (i+1) * triangles.size() / NUM_THREADS);
     }
     float lastTimeValue = 0;
+    /*
+    float FOLLOW_STRENGTH = 0.0005f;
+    float CENTERING_RANGE = 0.01f;
+    float CENTERING_STRENGTH = 0.000005;
+    float AVOID_WALL_STRENGTH = 0.00002;
+    float AVOID_DIST_THRESHOLD = 0.04; 
+    float AVOID_STRENGTH = 0.0005;
+    float MAX_SPEED = 0.001; 
+    float MIN_SPEED = 0.000375; 
+    */
     while (!glfwWindowShouldClose(window))
     {
         float timeValue = glfwGetTime();

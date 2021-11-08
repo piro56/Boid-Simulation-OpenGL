@@ -26,18 +26,18 @@ void Fish::setPosition(float x, float y) {
 }
 
 void Fish::avoidWall(float x, float y) {
-    float wall = 0.95;
+    float wall = 0.97;
     if ( x < -wall + sizeX * scaleX) {
-        dx += AVOID_WALL_STRENGTH;
+        dx += FISH_SETTINGS.AVOID_WALL_STRENGTH;
     }
     else if (x > wall - sizeX * scaleX) {
-        dx -= AVOID_WALL_STRENGTH;
+        dx -= FISH_SETTINGS.AVOID_WALL_STRENGTH;
     }
     if (y < -wall + sizeY * scaleY) {
-        dy += AVOID_WALL_STRENGTH;
+        dy += FISH_SETTINGS.AVOID_WALL_STRENGTH;
     }
     else if (y > wall - sizeY * scaleY) {
-        dy -= AVOID_WALL_STRENGTH;
+        dy -= FISH_SETTINGS.AVOID_WALL_STRENGTH;
     }
 
     if (abs(x) > 1.1 || abs(y) > 1.1) {
@@ -50,12 +50,12 @@ void Fish::avoidWall(float x, float y) {
 
 void Fish::limitSpeed() { 
     float speed = sqrtf(dx * dx + dy * dy);
-    if (speed > MAX_SPEED) {
-        dx = (dx / speed) * MAX_SPEED;
-        dy = (dy / speed) * MAX_SPEED;
-    } else if (speed < MIN_SPEED) {
-        dx = dx * (MIN_SPEED / speed);
-        dy = dy * (MIN_SPEED / speed);
+    if (speed > FISH_SETTINGS.MAX_SPEED) {
+        dx = (dx / speed) * FISH_SETTINGS.MAX_SPEED;
+        dy = (dy / speed) * FISH_SETTINGS.MAX_SPEED;
+    } else if (speed < FISH_SETTINGS.MIN_SPEED) {
+        dx = dx * (FISH_SETTINGS.MIN_SPEED / speed);
+        dy = dy * (FISH_SETTINGS.MIN_SPEED / speed);
     }
 }
 void Fish::draw() {
@@ -83,7 +83,7 @@ void Fish::calculateCentering() {
     unsigned int nearbyFish = 0;
     for (Fish* f : *otherFishes) {
         float distance = sqrtf((f->x-x)*(f->x-x) + (f->y-y)*(f->y-y));
-        if (distance < CENTERING_RANGE) {
+        if (distance < FISH_SETTINGS.CENTERING_RANGE) {
             centerX += f->x;
             centerX += f->y;
             nearbyFish++;
@@ -93,8 +93,8 @@ void Fish::calculateCentering() {
         centerX /= nearbyFish;
         centerY /= nearbyFish;
 
-        dx += (centerX - x) * CENTERING_STRENGTH;
-        dy += (centerY - y) * CENTERING_STRENGTH;
+        dx += (centerX - x) * FISH_SETTINGS.CENTERING_STRENGTH;
+        dy += (centerY - y) * FISH_SETTINGS.CENTERING_STRENGTH;
     }
 }
 
@@ -115,12 +115,12 @@ void Fish::calculateAvoidance() {
     for (Fish* f : *otherFishes) {
         float distance = sqrtf((f->x-x)*(f->x-x) + (f->y-y)*(f->y-y));
         // avoidance
-        if (distance < AVOID_DIST_THRESHOLD) {
+        if (distance < FISH_SETTINGS.AVOID_DIST_THRESHOLD) {
             moveX += x - f->x;
             moveY += y - f->y;
         }
         // CENTERING & HEADING CODE
-        if (distance < CENTERING_RANGE) {
+        if (distance < FISH_SETTINGS.CENTERING_RANGE) {
             averagedX += f->dx;
             averagedY += f->dy;
             centerX += f->x;
@@ -134,14 +134,14 @@ void Fish::calculateAvoidance() {
         centerY /= nearbyFish;
         averagedX /= nearbyFish;
         averagedY /= nearbyFish;
-        dx += (centerX - x) * CENTERING_STRENGTH;
-        dy += (centerY - y) * CENTERING_STRENGTH;
+        dx += (centerX - x) * FISH_SETTINGS.CENTERING_STRENGTH;
+        dy += (centerY - y) * FISH_SETTINGS.CENTERING_STRENGTH;
         
         // Heading
-        dx += ((averagedX - dx) * FOLLOW_STRENGTH);
-        dy += ((averagedY - dy) * FOLLOW_STRENGTH);
+        dx += ((averagedX - dx) * FISH_SETTINGS.FOLLOW_STRENGTH);
+        dy += ((averagedY - dy) * FISH_SETTINGS.FOLLOW_STRENGTH);
     }
     // avoidance
-    dx += moveX * AVOID_STRENGTH;
-    dy += moveY * AVOID_STRENGTH;
+    dx += moveX * FISH_SETTINGS.AVOID_STRENGTH;
+    dy += moveY * FISH_SETTINGS.AVOID_STRENGTH;
 }

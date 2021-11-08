@@ -11,16 +11,25 @@
 #include "VertexArray.h"
 #include "ShaderProgram.h"
 
+struct FishSettings {
+    float FOLLOW_STRENGTH = 0.0005f;
+    float CENTERING_RANGE = 0.01f;
+    float CENTERING_STRENGTH = 0.000005;
+    float AVOID_WALL_STRENGTH = 0.00002;
+    float AVOID_DIST_THRESHOLD = 0.04; 
+    float AVOID_STRENGTH = 0.0005;
+    float MAX_SPEED = 0.001; 
+    float MIN_SPEED = 0.000375; 
+};
 
 class Fish: public Triangle {
 private:
-    constexpr static float FOLLOW_STRENGTH = 0.005f;
-
-    constexpr static float CENTERING_RANGE = 0.02f;
+    constexpr static float FOLLOW_STRENGTH = 0.0005f;
+    constexpr static float CENTERING_RANGE = 0.01f;
     constexpr static float CENTERING_STRENGTH = 0.000005;
-    constexpr static float AVOID_WALL_STRENGTH = 0.0002;
+    constexpr static float AVOID_WALL_STRENGTH = 0.00002;
     constexpr static float AVOID_DIST_THRESHOLD = 0.04; 
-    constexpr static float AVOID_STRENGTH = 0.0003;
+    constexpr static float AVOID_STRENGTH = 0.0005;
     constexpr static float MAX_SPEED = 0.001; 
     constexpr static float MIN_SPEED = 0.000375;
 
@@ -35,6 +44,7 @@ private:
     void calculateCentering();
 public:
     using Triangle::Triangle;
+    static FishSettings& FISH_SETTINGS;
     Fish(float x, float y, float dx, float dy, std::vector<Fish*>* otherFishes);
     Fish(float xSize, float ySize, std::vector<Fish*>* otherFishes);
     void processMovement();
