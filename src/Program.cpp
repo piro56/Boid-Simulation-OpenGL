@@ -136,7 +136,6 @@ int main() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGui::ShowDemoWindow(&show_demo_window);
         {
             // simple slider window
             ImGui::Begin("BOID Settings");

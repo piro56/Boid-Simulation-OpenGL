@@ -11,7 +11,35 @@ void Triangle::draw() {
     vao.bind();
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
-
+Triangle::Triangle(float xSize, float ySize, std::string vsrc, std::string fsrc) {
+    this->x = 0.0f;
+    this->y = 0.0f;
+    this->sizeX = xSize;
+    this->sizeY = ySize;
+    float halfX = xSize / 2.0f;
+    float halfY = ySize / 2.0f;
+    float triVertices[9] = {
+        -halfX, -halfY, 0.0f,
+        halfX, -halfY, 0.0f,
+        0.0f, halfY, 0.0f
+    };
+    float triColors[9] = {
+        0.0f, 1.0f, 0.0f,
+        1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f
+    };
+    float triTexCoords[6] = {
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        0.5f, 1.0f
+    };
+    initTriangle(triVertices, triColors, triTexCoords, vsrc, fsrc);
+    this->transform = glm::mat4(1.0f);
+    //transform = glm::rotate(transform, 0.0f, glm::vec3(0.0, 0.0, 1.0));
+    transform = glm::translate(transform, glm::vec3(x, y, 0.0f));
+    this->shaderProgram->use();
+    this->shaderProgram->setMatrix4f("transform", 1, glm::value_ptr(transform));
+}
 Triangle::Triangle(float xSize, float ySize, bool useShader) {
     this->x = 0.0f;
     this->y = 0.0f;
@@ -43,7 +71,8 @@ Triangle::Triangle(float xSize, float ySize, bool useShader) {
     this->shaderProgram->setMatrix4f("transform", 1, glm::value_ptr(transform));
     }
 }
-void Triangle::initTriangle(float* verticesArr, float* colorsArr, float* texCoordsArr) {
+void Triangle::initTriangle(float* verticesArr, float* colorsArr, float* texCoordsArr,
+                            std::string vsrc, std::string fsrc) {
     if (sizeof(vertices) / sizeof(float) != 9) {
         std::cout << "OBJECT::TRIANGLE::INVALID_VERTICES_SIZE\n";
     }
@@ -77,8 +106,8 @@ void Triangle::initTriangle(float* verticesArr, float* colorsArr, float* texCoor
     this->vbo[2].setVertexAttributePointer(2, 2, GL_FLOAT, 2 * sizeof(float));
     this->vbo[2].enableAttribArray(2);
     if (useShader) {
-    ShaderProgram* s = new ShaderProgram(ShaderProgram::get_shader_file("vertex\\triangle.vs"),
-                           ShaderProgram::get_shader_file("fragment\\triangle.fs"));
+    ShaderProgram* s = new ShaderProgram(ShaderProgram::get_shader_file(vsrc),
+                           ShaderProgram::get_shader_file(fsrc));
     this->shaderProgram = s;
     }
 }

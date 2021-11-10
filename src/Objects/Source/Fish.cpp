@@ -3,14 +3,14 @@
 //  REFERENCES FROM https://github.com/beneater/boids/blob/master/boids.js
 
 Fish::Fish(float x, float y, float dx, float dy, std::vector<Fish*>* otherFish)
-            : Triangle::Triangle(x, y)
+            : Triangle::Triangle(x, y, "vertex\\fish.vs", "fragment\\fish.fs")
 {
     this->dx = dx;
     this->dy = dy;
     this->otherFishes = otherFish;
 }
 Fish::Fish(float xSize, float ySize, std::vector<Fish*>* otherFishes) 
-            : Triangle::Triangle(xSize, ySize)
+            : Triangle::Triangle(xSize, ySize, "vertex\\fish.vs", "fragment\\fish.fs")
 {
     this->setPosition((rand() % 3 - 1) * (rand() % 75) / 100.0f, 
                       (rand() % 3 - 1) * (rand() % 75) / 100.0f);
