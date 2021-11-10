@@ -20,6 +20,7 @@ struct FishSettings {
     float AVOID_STRENGTH = 0.0005;
     float MAX_SPEED = 0.001; 
     float MIN_SPEED = 0.000375; 
+    float SIZE = 1.0;
 };
 
 class Fish: public Triangle {

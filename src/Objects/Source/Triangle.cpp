@@ -102,10 +102,12 @@ void Triangle::preDraw() {
     this->shaderProgram->use();
 }
 void Triangle::scale(float scaleX, float scaleY, float scaleZ) {
-    this->scaleX = scaleX;
-    this->scaleY = scaleY;
-    this->scaleZ = scaleZ;
-    this->transUpdated = true;
+    if (this->scaleX != scaleX || this->scaleY != scaleY || this->scaleZ != scaleZ) {
+        this->scaleX = scaleX;
+        this->scaleY = scaleY;
+        this->scaleZ = scaleZ;
+        this->transUpdated = true;
+    }
 }
 void Triangle::setPosition(float x, float y) {
     this->x = x;

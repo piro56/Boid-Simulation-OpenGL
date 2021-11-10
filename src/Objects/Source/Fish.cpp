@@ -17,6 +17,7 @@ Fish::Fish(float xSize, float ySize, std::vector<Fish*>* otherFishes)
     this->dx = (rand() % 3 - 1) * (rand() % 100) / 100.0f;
     this->dy = (rand() % 3 - 1) * (rand() % 100) / 100.0f;
     this->otherFishes = otherFishes;
+    this->scale(FISH_SETTINGS.SIZE, FISH_SETTINGS.SIZE, 1.0f);
     limitSpeed();
 }
 
@@ -27,24 +28,22 @@ void Fish::setPosition(float x, float y) {
 
 void Fish::avoidWall(float x, float y) {
     float wall = 0.97;
-    if ( x < -wall + sizeX * scaleX) {
+    if ( x < -wall) {
         dx += FISH_SETTINGS.AVOID_WALL_STRENGTH;
     }
-    else if (x > wall - sizeX * scaleX) {
+    else if (x > wall) {
         dx -= FISH_SETTINGS.AVOID_WALL_STRENGTH;
     }
-    if (y < -wall + sizeY * scaleY) {
+    if (y < -wall) {
         dy += FISH_SETTINGS.AVOID_WALL_STRENGTH;
     }
-    else if (y > wall - sizeY * scaleY) {
+    else if (y > wall) {
         dy -= FISH_SETTINGS.AVOID_WALL_STRENGTH;
     }
 
-    if (abs(x) > 1.1 || abs(y) > 1.1) {
-        x = 0.0;
-        y = 0.0;
-        dx = MIN_SPEED;
-        dy = MIN_SPEED;
+    if (abs(x) > 1.2 || abs(y) > 1.2) {
+        this->x = 0.0;
+        this->y = 0.0;
     }
 }
 
@@ -63,7 +62,7 @@ void Fish::draw() {
     float absY = abs(dy);
     // can move this into the fragment shader!
     //setColor(0.2, 0.0, 0.6);
-
+    this->scale(FISH_SETTINGS.SIZE, FISH_SETTINGS.SIZE, 1.0f);
     setColor(absX * 30 + dx * dy + 0.5, absX * absY + x, absY * 30 + y);
     Triangle::draw();
 }

@@ -9,6 +9,14 @@
 				"${workspaceRoot}/src/Program.cpp",
 				// Include all source files.
 				"${workspaceRoot}/dependencies/GLAD/src/glad.c",
+				"${workspaceRoot}/dependencies/IMGUI/imgui.cpp",
+				"${workspaceRoot}/dependencies/IMGUI/imgui_draw.cpp",
+				"${workspaceRoot}/dependencies/IMGUI/imgui_demo.cpp",
+
+				"${workspaceRoot}/dependencies/IMGUI/imgui_impl_opengl3.cpp",
+				"${workspaceRoot}/dependencies/IMGUI/imgui_impl_glfw.cpp",
+				"${workspaceRoot}/dependencies/IMGUI/imgui_tables.cpp",
+				"${workspaceRoot}/dependencies/IMGUI/imgui_widgets.cpp",
 				// Include .cpp files here (These are for .h file code)
 				"${workspaceRoot}/src/source/VertexArray.cpp",
 				"${workspaceRoot}/src/source/VertexBuffer.cpp",
@@ -18,7 +26,6 @@
 				"${workspaceRoot}/src/source/Texture.cpp",
 				"${workspaceRoot}/src/Objects/Source/Triangle.cpp",
 				"${workspaceRoot}/src/Objects/Source/Fish.cpp",
-
 				// PROJECT DEPENDENCIES
 				"${workspaceRoot}/src/source/Camera.cpp",
 				"${workspaceRoot}/src/projects/dvdbouncer/DVD.cpp",
@@ -28,12 +35,13 @@
 				"--std=c++17",
 				"-I${workspaceRoot}/src/projects/dvdbouncer",	// PROJECT
 				"-I${workspaceRoot}/src/Headers",
+				"-I${workspaceRoot}/dependencies/IMGUI",
 				"-I${workspaceRoot}/src/Objects/2D",
 				"-I${workspaceRoot}/src/Objects",
 				"-I${workspaceRoot}/dependencies/GLFW/include",
 				"-I${workspaceFolder}/dependencies/GLAD/include",
 				//"-I${workspaceFolder}/dependencies/GLM",
-				"-lopengl32",
+				"-lopengl32", 
 				"-L${workspaceRoot}/dependencies/GLFW/lib-mingw-w64",
 				"-static",
 				"-lglfw3dll",

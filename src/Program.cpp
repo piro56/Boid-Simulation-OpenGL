@@ -7,6 +7,12 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "stb_image.h" // image loading
 
+// GUI
+#include <imgui.h>
+#include <imgui_impl_opengl3.h>
+#include <imgui_impl_glfw.h>
+#include <stdio.h>
+
 // My classes
 #include "VertexBuffer.h"
 #include "VertexArray.h"
@@ -31,8 +37,12 @@ float randomColor();
 std::atomic<bool> runThreads (true);
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
+const char* glsl_version = "#version 150";
+FishSettings fs_default = {
+    .0005, 0.01, 0.000005, 0.00002, 0.04, 0.005, 0.001, 0.000375, 1.0
+};
 FishSettings fs = {
-    .0005, 0.01, 0.000005, 0.00002, 0.04, 0.005, 0.001, 0.000375
+    .0005, 0.01, 0.000005, 0.00002, 0.04, 0.005, 0.001, 0.000375, 1.0
 };
 FishSettings& Fish::FISH_SETTINGS = fs;
 int main() {
@@ -101,21 +111,41 @@ int main() {
         threads[i] = std::thread(process_Movement_Thread, 
         std::ref(triangles), i * triangles.size() / NUM_THREADS, (i+1) * triangles.size() / NUM_THREADS);
     }
-    float lastTimeValue = 0;
-    /*
-    float FOLLOW_STRENGTH = 0.0005f;
-    float CENTERING_RANGE = 0.01f;
-    float CENTERING_STRENGTH = 0.000005;
-    float AVOID_WALL_STRENGTH = 0.00002;
-    float AVOID_DIST_THRESHOLD = 0.04; 
-    float AVOID_STRENGTH = 0.0005;
-    float MAX_SPEED = 0.001; 
-    float MIN_SPEED = 0.000375; 
-    */
+
+    // GUI
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io; 
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init(glsl_version);
+    bool show_demo_window = false;
+    bool show_another_window = false;
+    float avoidance_dist_mult = 1.0f;
+    float speed_mult = 1.0f;
+    float avoidance_turn_mult = 1.0f;
     while (!glfwWindowShouldClose(window))
     {
         float timeValue = glfwGetTime();
+        glfwPollEvents();
         process_input(window);
+        fs.AVOID_DIST_THRESHOLD = fs_default.AVOID_DIST_THRESHOLD * avoidance_dist_mult;
+        fs.AVOID_STRENGTH = fs_default.AVOID_STRENGTH * avoidance_turn_mult;
+        fs.MAX_SPEED = fs_default.MAX_SPEED * speed_mult;
+        fs.MIN_SPEED = fs_default.MIN_SPEED * speed_mult;
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGui::ShowDemoWindow(&show_demo_window);
+        {
+            // simple slider window
+            ImGui::Begin("Settings!");
+            ImGui::SliderFloat("Avoidance Distance", &avoidance_dist_mult, 0.001f, 5.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
+            ImGui::SliderFloat("Size", &fs.SIZE, 0.01f, 10.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
+            ImGui::SliderFloat("Avoidance Strength", &avoidance_turn_mult, 0.001f, 10.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
+            ImGui::SliderFloat("Speed", &speed_mult, 0.001f, 10.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
+            ImGui::End();
+        }
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         float offOne = (sin(timeValue)) / 2.0f;
@@ -126,11 +156,16 @@ int main() {
             //t->setPosition(t->getX() + (rand() % 3 - 1) * rand() % 200 / 20000.0f, t->getY() + (rand() % 3 - 1) * rand() % 200 / 20000.0f);
             t->draw();
         }
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         // Swapping buffers reduces artifacts.
         glfwSwapBuffers(window);
         // Polls events like keyboard/mouse inputs.
-        glfwPollEvents();
     }
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     runThreads = false;
     for (int i = 0; i < NUM_THREADS; i++) {
         threads[i].join();
