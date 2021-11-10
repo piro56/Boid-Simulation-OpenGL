@@ -139,11 +139,11 @@ int main() {
         ImGui::ShowDemoWindow(&show_demo_window);
         {
             // simple slider window
-            ImGui::Begin("Settings!");
+            ImGui::Begin("BOID Settings");
             ImGui::SliderFloat("Avoidance Distance", &avoidance_dist_mult, 0.001f, 5.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
             ImGui::SliderFloat("Size", &fs.SIZE, 0.01f, 10.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
-            ImGui::SliderFloat("Avoidance Strength", &avoidance_turn_mult, 0.001f, 10.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
-            ImGui::SliderFloat("Speed", &speed_mult, 0.001f, 10.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
+            ImGui::SliderFloat("Avoidance Strength", &avoidance_turn_mult, 0.01f, 5.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
+            ImGui::SliderFloat("Speed", &speed_mult, 0.1f, 10.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
             ImGui::End();
         }
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
