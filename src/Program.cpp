@@ -29,6 +29,8 @@
 
 #include <thread>
 #include <atomic>
+#include <memory>
+#include <set>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow *window);
@@ -93,7 +95,13 @@ int main() {
     float angle = 0.95;
     float xValue = 0.14 + dx;
     float yValue = 0.02 + dy;
-    
+
+    std::vector<std::unique_ptr<std::set<Fish*>>> segmentedFish;
+    for (int i = 0; i < 16; i ++) {
+        std::unique_ptr<std::set<Fish*>> segVec(new std::set<Fish*>);
+        segmentedFish.emplace_back(std::move(segVec));
+    }
+
     std::vector<Fish*> triangles;
     for (int i = 0; i < 1600; i++) {
         triangles.push_back(new Fish (0.005, 0.01, &triangles));

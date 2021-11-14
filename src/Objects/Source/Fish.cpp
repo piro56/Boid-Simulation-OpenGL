@@ -2,9 +2,11 @@
 
 //  REFERENCES FROM https://github.com/beneater/boids/blob/master/boids.js
 
-Fish::Fish(float x, float y, float dx, float dy, std::vector<Fish*>* otherFish)
+Fish::Fish(float x, float y, float dx, float dy, std::vector<Fish*>* otherFish, 
+            std::vector<std::unique_ptr<std::set<Fish*>>>* segmentedFish)
             : Triangle::Triangle(x, y, "vertex\\fish.vs", "fragment\\fish.fs")
 {
+    this->segmentedFish = segmentedFish;
     this->dx = dx;
     this->dy = dy;
     this->otherFishes = otherFish;
@@ -75,7 +77,27 @@ void Fish::processMovement() {
     float rotationAngle = 3 * M_PI_2 - atan2f(-dy, dx);
     setRotation(rotationAngle);
 }
-
+void Fish::updateSegment() {
+    double boundary = 0.5;
+    int xGrid = -1;
+    int yGrid = -1;
+    if (abs(x) < boundary) {
+        // 0 -> 1, 1 -> 2
+        xGrid = 1 + signbit(x);
+    } else {
+        // 0 -> 0, 1 -> 3
+        xGrid = 3 * signbit(x);
+    }
+    if (abs(y) < boundary) {
+        yGrid = 1 +  signbit(y);
+    } else {
+        yGrid = 3 *  signbit(y);
+    }
+    xGrid = (yGrid * 4) + xGrid; 
+    // if new position
+    if (vectorPosition != xGrid) {
+    }
+}
 void Fish::calculateCentering() {
     float centerX = 0.0f;
     float centerY = 0.0f;

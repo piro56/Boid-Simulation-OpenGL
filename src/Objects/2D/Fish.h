@@ -6,10 +6,13 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
+#include <memory>
+#include <set>
 
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "ShaderProgram.h"
+
 
 struct FishSettings {
     float FOLLOW_STRENGTH = 0.0005f;
@@ -33,7 +36,8 @@ private:
     constexpr static float AVOID_STRENGTH = 0.0005;
     constexpr static float MAX_SPEED = 0.001; 
     constexpr static float MIN_SPEED = 0.000375;
-
+    std::vector<std::unique_ptr<std::set<Fish*>>>* segmentedFish;
+    int vectorPosition = -1;
     float dx = 0.01;
     float dy = 0.01;
     float Ax = 0.0;
@@ -46,10 +50,12 @@ private:
 public:
     using Triangle::Triangle;
     static FishSettings& FISH_SETTINGS;
-    Fish(float x, float y, float dx, float dy, std::vector<Fish*>* otherFishes);
+    Fish(float x, float y, float dx, float dy, std::vector<Fish*>* otherFish, 
+            std::vector<std::unique_ptr<std::set<Fish*>>>* segmentedFish);
     Fish(float xSize, float ySize, std::vector<Fish*>* otherFishes);
     void processMovement();
     void setPosition(float x, float y);
+    void updateSegment();
     void draw();
     static float angleBetween(float x1, float y1, float x2, float y2) {
         float dot = x1*x2 + y1*y2;
