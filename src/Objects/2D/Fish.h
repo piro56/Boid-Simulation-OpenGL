@@ -38,6 +38,7 @@ private:
     constexpr static float MIN_SPEED = 0.000375;
     std::vector<std::unique_ptr<std::set<Fish*>>>* segmentedFish;
     int vectorPosition = -1;
+    FishSettings* FISH_SETTINGS;
     float dx = 0.01;
     float dy = 0.01;
     float Ax = 0.0;
@@ -49,13 +50,15 @@ private:
     void calculateCentering();
 public:
     using Triangle::Triangle;
-    static FishSettings& FISH_SETTINGS;
     Fish(float x, float y, float dx, float dy, std::vector<Fish*>* otherFish, 
-            std::vector<std::unique_ptr<std::set<Fish*>>>* segmentedFish);
-    Fish(float xSize, float ySize, std::vector<Fish*>* otherFishes);
+            std::vector<std::unique_ptr<std::set<Fish*>>>* segmentedFish, FishSettings& fish_settings);
+    Fish(float xSize, float ySize, std::vector<Fish*>* otherFishes,  FishSettings& fish_settings);
     void processMovement();
     void setPosition(float x, float y);
     void updateSegment();
+    void setFishSettings(FishSettings& fsp) {
+        this->FISH_SETTINGS = &fsp;
+    }
     void draw();
     static float angleBetween(float x1, float y1, float x2, float y2) {
         float dot = x1*x2 + y1*y2;

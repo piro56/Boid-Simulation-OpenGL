@@ -9,10 +9,10 @@
             "name": "g++.exe - Build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/builds/windows/Program.exe",
+            "program": "${workspaceRoot}/builds/windows/${fileBasenameNoExtension}.exe",
             //"program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [
-                "${workspaceRoot}/src/Program.cpp",
+                "${file}",
 				// Include all source files.
 				"${workspaceRoot}/dependencies/GLAD/src/glad.c",
 				// Include .cpp files here (These are for .h file code)
@@ -39,7 +39,7 @@
 				"-static",
 				"-lglfw3dll",
 				"-o",
-				"${workspaceRoot}/builds/windows/Program"
+				"${workspaceRoot}/builds/windows/${fileBasenameNoExtension}.exe"
             ],
             "stopAtEntry": false,
             "cwd": "C:\\msys64\\mingw64\\bin",
