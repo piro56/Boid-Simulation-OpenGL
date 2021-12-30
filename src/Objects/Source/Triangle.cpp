@@ -101,6 +101,7 @@ void Triangle::initTriangle(float* verticesArr, float* colorsArr, float* texCoor
     this->vbo[1].setBufferData(sizeof(colors), colors, usage);
     this->vbo[1].setVertexAttributePointer(1, 3, GL_FLOAT, 3 * sizeof(float));
     this->vbo[1].enableAttribArray(1);
+    // set to tex coords not colors
     this->vbo[2].bind();
     this->vbo[2].setBufferData(sizeof(colors), colors, usage);
     this->vbo[2].setVertexAttributePointer(2, 2, GL_FLOAT, 2 * sizeof(float));
@@ -144,8 +145,8 @@ void Triangle::setPosition(float x, float y) {
     transform = glm::mat4(1.0f);
     transform = glm::translate(transform, glm::vec3(x, y, 0.0f));
     this->transUpdated = true;
-
 }
+
 void Triangle::setTexture(Texture& t) {
     this->tex = &t;
 }

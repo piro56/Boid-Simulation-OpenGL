@@ -6,7 +6,6 @@
 #include "Texture.h"
 #include "VertexArray.h"
 #include "VertexBuffer.h"
-#include 
 
 // TODO, DO THIS LOL !! 
 class Cube {

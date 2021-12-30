@@ -26,6 +26,9 @@
 				"${workspaceRoot}/src/source/Texture.cpp",
 				"${workspaceRoot}/src/Objects/Source/Triangle.cpp",
 				"${workspaceRoot}/src/Objects/Source/Fish.cpp",
+				"${workspaceRoot}/src/Objects/Circle.cpp",
+				"${workspaceRoot}/src/Objects/Rectangle.cpp",
+				"${workspaceRoot}/src/source/ShaderManager.cpp",
 				// PROJECT DEPENDENCIES
 				"${workspaceRoot}/src/source/Camera.cpp",
 				"${workspaceRoot}/src/projects/dvdbouncer/DVD.cpp",
