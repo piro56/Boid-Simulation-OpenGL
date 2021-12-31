@@ -8,7 +8,9 @@ ShaderProgram::ShaderProgram(std::string vertex_path, std::string fragment_path)
 ShaderProgram::ShaderProgram(const char* vertexPath, const char* fragPath) {
     this->load(vertexPath, fragPath);
 }
+ShaderProgram::ShaderProgram() {
 
+}
 
 
 void ShaderProgram::use() {
@@ -67,6 +69,7 @@ void ShaderProgram::load(const char* vertexPath, const char* fragPath) {
     std::string fragCode;
     std::ifstream vShaderFile;
     std::ifstream fShaderFile;
+    loaded = true;
     // Ensure ifstream can throw exceptions
     vShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
     fShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
@@ -83,6 +86,7 @@ void ShaderProgram::load(const char* vertexPath, const char* fragPath) {
         fragCode = fShaderStream.str();
     } else {
         std::cout << "ERROR::SHADERPROGRAM::FILE_READ_ERROR......" << std::endl;
+        loaded = false;
     }
     //std::cout << "-------------Fragment---------------\n" << fragCode << "\n--------\n"; 
     //std::cout << "-------------Vertex---------------\n" << vertexCode << "\n--------\n"; 
@@ -133,6 +137,7 @@ void ShaderProgram::load(const char* vertexPath, const char* fragPath) {
     if(!success) {
         glGetProgramInfoLog(this->shaderProgramID, 512, NULL, infoLog);
         std::cout << "ERROR::SHADERPROGRAM::LINKING_FAILURE\n" << infoLog << std::endl;
+        loaded = false;
     }
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);

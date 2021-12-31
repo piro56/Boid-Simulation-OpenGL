@@ -17,11 +17,12 @@ class Rectangle {
 private:
     // DRAWING:
     VertexArray vao;
-    VertexBuffer vbo[4];
+    VertexBuffer vbo[2];
     ElementBuffer veb;
-    ShaderProgram* shaderProgram;
+    ShaderProgram* shaderProgram = nullptr;
     GLenum usage = GL_DYNAMIC_DRAW;
     float vertices[12];
+    float indices[6] = {0, 1, 3, 1, 2, 3};
     float colors[12];
     float texCoords[8];
     float scaleX = 1.0f;
@@ -44,14 +45,12 @@ public:
     Rectangle(float xLength, float yLength);
     void setColor(int r, int g, int b);
     void randomColor();
-    void setShader(ShaderProgram* sp) {
-        this->shaderProgram = sp;
-    }
+    void setShader(ShaderProgram* sp);
     void preDraw();
     void draw();
     void scale(float scaleX, float scaleY, float scaleZ);
     void setPosition(float x, float y);
-
+    void setColor(float r, float g, float b);
 
 };
 }

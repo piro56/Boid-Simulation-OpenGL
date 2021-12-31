@@ -37,7 +37,7 @@
 				"-g",
 				"--std=c++17",
 				"-I${workspaceRoot}/src/projects/dvdbouncer",	// PROJECT
-				"-I${workspaceRoot}/src/Headers",
+				"-I${workspaceRoot}/src/headers",
 				"-I${workspaceRoot}/dependencies/IMGUI",
 				"-I${workspaceRoot}/src/Objects/2D",
 				"-I${workspaceRoot}/src/Objects",

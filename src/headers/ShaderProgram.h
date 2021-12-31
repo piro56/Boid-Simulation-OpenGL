@@ -12,6 +12,7 @@
 class ShaderProgram {
 private:
     char* shaderData;
+    std::string shaderName;
     unsigned int shaderProgramID;
     bool loaded;
 public:
@@ -36,8 +37,10 @@ public:
         return std::string( result, GetModuleFileName( NULL, result, MAX_PATH ) );
     }
     static std::string get_shader_file(std::string fileName);
+    std::string getName() { return shaderName; }
+    void setName(std::string name) { shaderName = name; }
     ShaderProgram(std::string vertexShaderPath, std::string fragShaderPath);
     ShaderProgram(const char* vertexPath, const char* fragPath);
     ShaderProgram();
-    
+    bool isLoaded() { return loaded; }
 };

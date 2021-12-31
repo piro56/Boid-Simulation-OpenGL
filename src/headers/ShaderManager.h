@@ -6,8 +6,9 @@ class ShaderManager {
 private:
     std::vector<ShaderProgram> shaders;
 public:
-    ShaderProgram getShader(std::string shadername);
+    ShaderProgram* getShader(std::string shadername);
     
     void load_shader(std::string shadername);
-    bool unload_shader(std::string shadername);
+    //bool unload_shader(std::string shadername);
+    ShaderManager();
 };

@@ -18,6 +18,8 @@
 #include "Texture.h"
 #include <Circle.h>
 #include <Rectangle.h>
+#include "Triangle.h"
+#include "ShaderManager.h"
 using namespace shp;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow *window);
@@ -29,8 +31,8 @@ int main() {
     // Initialize and configure GLFW -> Set the version &
     // set profile to CORE so we do not get backwards-compatible features.
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
 
@@ -54,11 +56,11 @@ int main() {
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     // When window is resized -> call frambuffer_size_callback.
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-
+    ShaderManager shaderManager;
+    shaderManager.load_shader("rectangle");
     Circle c;
     shp::Rectangle r;
-    
+    r.setShader(shaderManager.getShader("rectangle"));
 
 
 
@@ -71,7 +73,7 @@ int main() {
         process_input(window);
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
+        r.draw();
         glfwSwapBuffers(window);
         // Polls events like keyboard/mouse inputs.
         glfwPollEvents();
