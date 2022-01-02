@@ -36,14 +36,12 @@ public:
     Texture* tex = nullptr;
     ShaderProgram* shaderProgram = nullptr;
     Triangle();
-    Triangle(float* vertices, float* colors, float* texCoords);
-    Triangle(float xSize, float ySize, std::string vsrc, std::string fsrc);
-    Triangle(float widthRatio, float heightRatio, bool useShader = true);
+    Triangle(float* vertices, float* colors, float* texCoords, ShaderProgram* sp);
+    Triangle(float xSize, float ySize, ShaderProgram* sp);
+    //Triangle(float widthRatio, float heightRatio, ShaderProgram* sp);
     ~Triangle();
     void draw();
-    void initTriangle(float* vertices, float* colors, float* texCoords,
-                     std::string vsrc = "vertex\\triangle.vs", 
-                     std::string fsrc = "fragment\\triangle.fs");
+    void initTriangle(float* vertices, float* colors, float* texCoords);
     void setTexture(Texture& t);    
     void setPosition(float x, float y);
     void setColor(float r, float g, float b);

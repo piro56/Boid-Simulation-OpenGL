@@ -27,12 +27,13 @@ void process_input(GLFWwindow *window);
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 int main() {
+    std::cout << "Compile Time: " << __TIME__ << "\n";
     srand(time(NULL));  // initialize random
     // Initialize and configure GLFW -> Set the version &
     // set profile to CORE so we do not get backwards-compatible features.
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
 
@@ -58,9 +59,13 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     ShaderManager shaderManager;
     shaderManager.load_shader("rectangle");
-    Circle c;
-    shp::Rectangle r;
-    r.setShader(shaderManager.getShader("rectangle"));
+    shaderManager.load_shader("triangle");
+    ShaderProgram* rectangleShader =  shaderManager.getShader("rectangle");
+    shp::Rectangle r = shp::Rectangle(0.6f, 0.8f, rectangleShader);
+    shp::Rectangle r2 = shp::Rectangle(0.2f, 0.2f, rectangleShader);
+
+    Triangle t = Triangle(0.2, 0.2, shaderManager.getShader("triangle"));
+    t.setColor(0.0f, 0.2f, 0.6f);
 
 
 
@@ -73,7 +78,13 @@ int main() {
         process_input(window);
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        float time = glfwGetTime();
+        r.scale(cos(time), sin(time), 1.0f);
+        r2.setPosition(0.4f, 0.4f);
+        r2.setColor(1.0f, 1.0f, 0.0f);
         r.draw();
+        r2.draw();
+        //t.draw();
         glfwSwapBuffers(window);
         // Polls events like keyboard/mouse inputs.
         glfwPollEvents();

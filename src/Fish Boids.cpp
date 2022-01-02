@@ -16,11 +16,13 @@
 // My classes
 #include "VertexBuffer.h"
 #include "VertexArray.h"
+#include "ShaderManager.h"
 #include "ShaderProgram.h"
 #include "ElementBuffer.h"
 #include "Texture.h"
 #include "Triangle.h"
 #include "Fish.h"
+
 
 #include <windows.h>
 #include <filesystem>
@@ -83,12 +85,6 @@ int main() {
 
 
     srand(time(NULL));
-    float pixels[800][600];
-    for (int i = 0; i < 800; i++) {
-        for (int j = 0; j < 600; j++) {
-            pixels[i][j] = 0.0f;
-        }
-    }
     float dx = 0.0165;
     float dy = -0.015;
     float angle = 0.95;
@@ -102,8 +98,11 @@ int main() {
     }
 
     std::vector<Fish*> triangles;
-    for (int i = 0; i < 1600; i++) {
-        triangles.push_back(new Fish (0.005, 0.01, &triangles, fs));
+    ShaderManager shaderManager;
+    shaderManager.load_shader("fish");
+    ShaderProgram* sp = shaderManager.getShader("fish");
+    for (int i = 0; i < 10000; i++) {
+        triangles.push_back(new Fish (0.005, 0.01, &triangles, fs, sp));
         triangles[i]->setColor(200 / 255.0f, 20.0f/255.0f, 20.0f/255.0f);
 
         //triangles[i]->setColor(randomColor(), randomColor(), randomColor());
@@ -133,8 +132,9 @@ int main() {
     float avoidance_turn_mult = 1.0f;
     while (!glfwWindowShouldClose(window))
     {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
         float timeValue = glfwGetTime();
-        glfwPollEvents();
         process_input(window);
         fs.AVOID_DIST_THRESHOLD = fs_default.AVOID_DIST_THRESHOLD * avoidance_dist_mult;
         fs.AVOID_STRENGTH = fs_default.AVOID_STRENGTH * avoidance_turn_mult;
@@ -152,8 +152,6 @@ int main() {
             ImGui::SliderFloat("Speed", &speed_mult, 0.1f, 10.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
             ImGui::End();
         }
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
         float offOne = (sin(timeValue)) / 2.0f;
         float offTwo = (cos(timeValue)) / 2.0f;
         int counter = 0;
@@ -167,6 +165,8 @@ int main() {
 
         // Swapping buffers reduces artifacts.
         glfwSwapBuffers(window);
+        glfwPollEvents();
+
         // Polls events like keyboard/mouse inputs.
     }
     ImGui_ImplOpenGL3_Shutdown();

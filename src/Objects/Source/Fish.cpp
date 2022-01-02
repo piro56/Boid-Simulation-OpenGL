@@ -3,8 +3,8 @@
 //  REFERENCES FROM https://github.com/beneater/boids/blob/master/boids.js
 
 Fish::Fish(float x, float y, float dx, float dy, std::vector<Fish*>* otherFish, 
-            std::vector<std::unique_ptr<std::set<Fish*>>>* segmentedFish, FishSettings& fsp)
-            : Triangle::Triangle(x, y, "vertex\\fish.vs", "fragment\\fish.fs")
+            std::vector<std::unique_ptr<std::set<Fish*>>>* segmentedFish, FishSettings& fsp, ShaderProgram* sp)
+            : Triangle::Triangle(x, y, sp)
 {
     this->segmentedFish = segmentedFish;
     this->dx = dx;
@@ -12,8 +12,8 @@ Fish::Fish(float x, float y, float dx, float dy, std::vector<Fish*>* otherFish,
     this->otherFishes = otherFish;
     this->FISH_SETTINGS = &fsp;
 }
-Fish::Fish(float xSize, float ySize, std::vector<Fish*>* otherFishes, FishSettings& fsp) 
-            : Triangle::Triangle(xSize, ySize, "vertex\\fish.vs", "fragment\\fish.fs")
+Fish::Fish(float xSize, float ySize, std::vector<Fish*>* otherFishes, FishSettings& fsp, ShaderProgram* sp) 
+            : Triangle::Triangle(xSize, ySize, sp)
 {
     this->setPosition((rand() % 3 - 1) * (rand() % 75) / 100.0f, 
                       (rand() % 3 - 1) * (rand() % 75) / 100.0f);

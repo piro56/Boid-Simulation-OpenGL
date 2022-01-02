@@ -51,8 +51,8 @@ private:
 public:
     using Triangle::Triangle;
     Fish(float x, float y, float dx, float dy, std::vector<Fish*>* otherFish, 
-            std::vector<std::unique_ptr<std::set<Fish*>>>* segmentedFish, FishSettings& fish_settings);
-    Fish(float xSize, float ySize, std::vector<Fish*>* otherFishes,  FishSettings& fish_settings);
+            std::vector<std::unique_ptr<std::set<Fish*>>>* segmentedFish, FishSettings& fish_settings, ShaderProgram* sp);
+    Fish(float xSize, float ySize, std::vector<Fish*>* otherFishes,  FishSettings& fish_settings, ShaderProgram* sp);
     void processMovement();
     void setPosition(float x, float y);
     void updateSegment();

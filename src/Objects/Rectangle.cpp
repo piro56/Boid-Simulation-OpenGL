@@ -13,9 +13,12 @@ Rectangle::Rectangle(float xLength, float yLength, float x, float y)
     initializePoints();
 }
 
-Rectangle::Rectangle(float xLength, float yLength) 
+Rectangle::Rectangle(float xLength, float yLength, ShaderProgram* sp) 
     : xLength{xLength}, yLength{yLength}, x{0}, y{0}
 {
+    glGenBuffers(1, &EBO);
+    this->shaderProgram = sp;
+    sp->use();
     randomColor();
     initializePoints();
 }
@@ -39,30 +42,31 @@ void Rectangle::initializePoints() {
     // we translate this later.
     float vertices[12] = { halfX,  halfY, 0.0f, // TR
                            halfX, -halfY, 0.0f, // BR
-                          -halfX, -halfY, 0.0f  // BL 
-                          -halfX,  halfX, 0.0f, // TL
+                          -halfX, -halfY, 0.0f, // BL 
+                          -halfX,  halfY, 0.0f, // TL
                          };
     float colors[12] = {
         r, g, b, r, g, b, r, g, b, r, g, b
     };
     for (int i = 0; i < 12; i++) {
         this->vertices[i] = vertices[i];
+        std::cout << "Vertice " << i << ": " << vertices[i] << "\n";
         this->colors[i] = colors[i];
     }
     //    float indices[6] = {3, 0, 1, 3, 2, 0};
     this->vao.bind();
-    this->vbo[0].bind();
-    this->vbo[0].setBufferData(sizeof(this->vertices), this->vertices, usage);
-    this->veb.bind();
-    this->veb.setData(sizeof(indices), indices, GL_DYNAMIC_DRAW);
-
-    this->vbo[0].setVertexAttributePointer(0, 3, GL_FLOAT, 3 * sizeof(float));
-    this->vbo[0].enableAttribArray(0);
-
-    // this->vbo[1].bind();
-    // this->vbo[1].setBufferData(sizeof(this->colors), this->colors, usage);
-    // this->vbo[1].setVertexAttributePointer(1, 3, GL_FLOAT, 3 * sizeof(float));
-    // this->vbo[1].enableAttribArray(1);
+    this->vbo.bind();
+    for (int i : indices) {
+        std::cout << "Indice: " << i << "\n";
+    }
+    this->vbo.setBufferData(sizeof(this->vertices), this->vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    
+    // this->veb.bind();
+    // this->veb.setData(sizeof(indices), indices, GL_DYNAMIC_DRAW);
+    this->vbo.setVertexAttributePointer(0, 3, GL_FLOAT, 3 * sizeof(float));
+    this->vbo.enableAttribArray(0);
 }
 void Rectangle::scale(float scaleX, float scaleY, float scaleZ) {
     if (this->scaleX != scaleX || this->scaleY != scaleY || this->scaleZ != scaleZ) {
@@ -84,8 +88,9 @@ void Rectangle::draw() {
     if (shaderProgram != nullptr) {
         this->preDraw();
     }
-    veb.bind();
+    //veb.bind();
     vao.bind();
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
