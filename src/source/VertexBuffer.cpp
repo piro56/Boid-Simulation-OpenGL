@@ -4,9 +4,12 @@
 void VertexBuffer::unbind() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-
+void VertexBuffer::bind(GLenum target) {
+        glBindBuffer(target, this->VBO);
+}
 void VertexBuffer::bind() {
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+
 }
 
 // TODO: add easier way to do this eventually...
@@ -14,7 +17,10 @@ void VertexBuffer::setBufferData(GLsizeiptr size,
                         const GLvoid* data, GLenum usage) {
     glBufferData(GL_ARRAY_BUFFER, size, data, usage);
 }
-
+void VertexBuffer::setBufferData(GLenum target, GLsizeiptr size,
+                        const GLvoid* data, GLenum usage) {
+    glBufferData(target, size, data, usage);
+}
 // Eventually make another class that handles size automatically...
 void VertexBuffer::setVertexAttributePointer(GLuint index, GLint size, 
                                             GLenum type, GLboolean normalized, 

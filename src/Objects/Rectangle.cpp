@@ -16,7 +16,6 @@ Rectangle::Rectangle(float xLength, float yLength, float x, float y)
 Rectangle::Rectangle(float xLength, float yLength, ShaderProgram* sp) 
     : xLength{xLength}, yLength{yLength}, x{0}, y{0}
 {
-    glGenBuffers(1, &EBO);
     this->shaderProgram = sp;
     sp->use();
     randomColor();
@@ -59,12 +58,9 @@ void Rectangle::initializePoints() {
     for (int i : indices) {
         std::cout << "Indice: " << i << "\n";
     }
-    this->vbo.setBufferData(sizeof(this->vertices), this->vertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-    
-    // this->veb.bind();
-    // this->veb.setData(sizeof(indices), indices, GL_DYNAMIC_DRAW);
+    this->vbo.setBufferData(sizeof(this->vertices), this->vertices, GL_STATIC_DRAW);    
+    this->veb.bind();
+    this->veb.setData(sizeof(indices), indices, GL_DYNAMIC_DRAW);
     this->vbo.setVertexAttributePointer(0, 3, GL_FLOAT, 3 * sizeof(float));
     this->vbo.enableAttribArray(0);
 }
@@ -83,14 +79,16 @@ void Rectangle::setPosition(float x, float y) {
     transform = glm::translate(transform, glm::vec3(x, y, 0.0f));
     this->transUpdated = true;
 }
-
+void Rectangle::setRotation(float rotation) {
+    this->rotation = rotation;
+    this->transUpdated = true;
+}
 void Rectangle::draw() {
     if (shaderProgram != nullptr) {
         this->preDraw();
     }
-    //veb.bind();
+    veb.bind();
     vao.bind();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 

@@ -1,9 +1,12 @@
 #include "ShaderProgram.h"
 
+
 ShaderProgram::ShaderProgram(std::string vertex_path, std::string fragment_path) {
     this->load(vertex_path.c_str(), fragment_path.c_str());
 }
-
+ShaderProgram::ShaderProgram(std::string srcPath) {
+    this->load(srcPath.c_str());
+}
 // Inspired by LearnOpenGL.com
 ShaderProgram::ShaderProgram(const char* vertexPath, const char* fragPath) {
     this->load(vertexPath, fragPath);
@@ -142,7 +145,71 @@ void ShaderProgram::load(const char* vertexPath, const char* fragPath) {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 }
+void ShaderProgram::load(const char* srcPath) {
+    unsigned int srcShader;
+    std::string srcCode;
+    std::ifstream sShaderFile;
+    loaded = true;
+    // Ensure ifstream can throw exceptions
+    sShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
 
+    sShaderFile = std::ifstream(srcPath);
+    if(sShaderFile.is_open()) {
+        std::stringstream sShaderStream;
+        sShaderStream << sShaderFile.rdbuf();
+        sShaderFile.close();
+        srcCode = sShaderStream.str();
+    } else {
+        std::cout << "ERROR::SHADERPROGRAM::FILE_READ_ERROR......" << std::endl;
+        loaded = false;
+    }
+    //std::cout << "-------------Fragment---------------\n" << fragCode << "\n--------\n"; 
+    //std::cout << "-------------Vertex---------------\n" << vertexCode << "\n--------\n"; 
+
+/*     try {
+        // open files
+        vShaderFile.open(vertexPath);
+        fShaderFile.open(fragCode);
+        std::stringstream vShaderStream, fShaderStream;
+        // read file buffer into streams
+        vShaderStream << vShaderFile.rdbuf();
+        fShaderStream << fShaderFile.rdbuf();
+        // close files
+        vShaderFile.close();
+        fShaderFile.close();
+        // convert stream into string
+        vertexCode = vShaderStream.str();
+        fragCode = fShaderStream.str();
+    }
+    catch (std::ifstream::failure e) {
+        std::cout << "ERROR::SHADERPROGRAM::FILE_READ_ERROR..." << std::endl;
+    } */
+
+    const char* sShaderCode = srcCode.c_str();
+    srcShader = glCreateShader(GL_COMPUTE_SHADER);
+
+    glShaderSource(srcShader, 1, &sShaderCode, NULL);
+
+    // COMPILE
+    glCompileShader(srcShader);
+    compileCheck(srcShader, true);
+
+    // GENERATE PROGRAM
+    this->shaderProgramID = glCreateProgram();
+    // ATTACH
+    glAttachShader(this->shaderProgramID, srcShader);
+    glLinkProgram(this->shaderProgramID);
+    // Check Program Link Errors
+    int success;
+    char infoLog[512];
+    glGetProgramiv(this->shaderProgramID, GL_LINK_STATUS, &success);
+    if(!success) {
+        glGetProgramInfoLog(this->shaderProgramID, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADERPROGRAM::LINKING_FAILURE\n" << infoLog << std::endl;
+        loaded = false;
+    }
+    glDeleteShader(srcShader);
+}
 
 std::string ShaderProgram::get_shader_file(std::string fileName) {
     std::string s = ShaderProgram::getexepath();

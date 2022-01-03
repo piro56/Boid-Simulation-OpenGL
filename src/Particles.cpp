@@ -61,15 +61,11 @@ int main() {
     shaderManager.load_shader("rectangle");
     shaderManager.load_shader("triangle");
     ShaderProgram* rectangleShader =  shaderManager.getShader("rectangle");
-    shp::Rectangle r = shp::Rectangle(0.6f, 0.8f, rectangleShader);
-    shp::Rectangle r2 = shp::Rectangle(0.2f, 0.2f, rectangleShader);
-
-    Triangle t = Triangle(0.2, 0.2, shaderManager.getShader("triangle"));
-    t.setColor(0.0f, 0.2f, 0.6f);
+    shp::Rectangle r = shp::Rectangle(0.01f, 0.01f, rectangleShader);
 
 
 
-
+    std::cout << "Float: " << sizeof(float) << " Uint: " << sizeof(unsigned int) << "\n";
 
 
 
@@ -79,11 +75,9 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         float time = glfwGetTime();
-        r.scale(cos(time), sin(time), 1.0f);
-        r2.setPosition(0.4f, 0.4f);
-        r2.setColor(1.0f, 1.0f, 0.0f);
+        r.setRotation(cos(time) * 10);
+        r.setPosition(r.getX(), sin(time)/2);
         r.draw();
-        r2.draw();
         //t.draw();
         glfwSwapBuffers(window);
         // Polls events like keyboard/mouse inputs.

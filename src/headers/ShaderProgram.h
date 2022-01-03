@@ -22,9 +22,11 @@ public:
     
     // Compile shaders and link
     //void loadShaders(std::string vertexShaderPath, std::string fragShaderPath);
+    static std::string get_shader_file(std::string fileName);   
     void compileCheck(unsigned int vertexShader, bool vertex);
     void use();
     void load(const char* vertexPath, const char* fragPath);
+    void load(const char* srcPath);
     void setBool(const std::string &name, bool value) const;
     void setInt(const std::string &name, int value) const;
     void setFloat(const std::string &name, float value) const;
@@ -36,11 +38,11 @@ public:
         char result[ MAX_PATH ];
         return std::string( result, GetModuleFileName( NULL, result, MAX_PATH ) );
     }
-    static std::string get_shader_file(std::string fileName);
     std::string getName() { return shaderName; }
     void setName(std::string name) { shaderName = name; }
     ShaderProgram(std::string vertexShaderPath, std::string fragShaderPath);
     ShaderProgram(const char* vertexPath, const char* fragPath);
+    ShaderProgram(std::string sourcePath);
     ShaderProgram();
     bool isLoaded() { return loaded; }
 };
