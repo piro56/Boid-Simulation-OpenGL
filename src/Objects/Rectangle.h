@@ -12,6 +12,7 @@
 #include <time.h>
 #define M_PI 3.14159265358979323846
 #define DEFAULT_CIRCLE_SEGMENTS 10
+#define DEBUG 1
 namespace shp {
 class Rectangle {
 private:

@@ -28,6 +28,7 @@
 				"${workspaceRoot}/src/Objects/Source/Fish.cpp",
 				"${workspaceRoot}/src/Objects/Circle.cpp",
 				"${workspaceRoot}/src/Objects/Rectangle.cpp",
+				"${workspaceRoot}/src/Objects/RectangleStack.cpp",
 				"${workspaceRoot}/src/source/ShaderManager.cpp",
 				// PROJECT DEPENDENCIES
 				"${workspaceRoot}/src/source/Camera.cpp",

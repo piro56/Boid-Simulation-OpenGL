@@ -117,6 +117,7 @@ void Triangle::setRotation(float rotation) {
     this->rotation = rotation;
 }
 void Triangle::preDraw() {
+    this->shaderProgram->use();
     if (transUpdated){
     transform = glm::mat4(1.0f);
     transform = glm::translate(transform, glm::vec3(x, y, 0.0f));
@@ -125,7 +126,6 @@ void Triangle::preDraw() {
     this->shaderProgram->setMatrix4f("transform", GL_FALSE, glm::value_ptr(transform));
     }
     transUpdated = false;
-    this->shaderProgram->use();
 }
 void Triangle::scale(float scaleX, float scaleY, float scaleZ) {
     if (this->scaleX != scaleX || this->scaleY != scaleY || this->scaleZ != scaleZ) {

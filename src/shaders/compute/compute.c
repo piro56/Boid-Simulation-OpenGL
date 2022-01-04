@@ -15,17 +15,17 @@ gl_LocalInvocationIndex =     gl_LocalInvocationID.z * gl_WorkGroupSize.y * gl_W
 gl_LocalInvocationID.y * gl_WorkGroupSize.x + gl_LocalInvocationID.x
 */ 
 
-layout( std140, binding=4 ) buffer Pos
+layout( std430, binding=4 ) buffer Pos
 {
 vec4 Positions[ ]; // array of structures
 };
 
-layout( std140, binding=5 ) buffer Vel
+layout( std430, binding=5 ) buffer Vel
 {
 vec4 Velocities[ ]; // array of structures
 };
 
-layout( std140, binding=6 ) buffer Col
+layout( std430, binding=6 ) buffer Col
 {
 vec4 Colors[ ]; // array of structures
 };

@@ -84,25 +84,30 @@ void Rectangle::setRotation(float rotation) {
     this->transUpdated = true;
 }
 void Rectangle::draw() {
-    if (shaderProgram != nullptr) {
-        this->preDraw();
-    }
-    veb.bind();
+    this->preDraw();
     vao.bind();
+    vbo.bind();
+    veb.bind();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 void Rectangle::preDraw() {
+    this->shaderProgram->use();
     if (transUpdated) {
         transform = glm::mat4(1.0f);
         transform = glm::translate(transform, glm::vec3(x, y, 0.0f));
         transform = glm::rotate(transform, rotation, glm::vec3(0.0,0.0,1.0));
         transform = glm::scale(transform, glm::vec3(scaleX, scaleY, scaleZ));
         this->shaderProgram->setVec3Float("selectedColor", r, g, b);
-        this->shaderProgram->setMatrix4f("transform", GL_FALSE, glm::value_ptr(transform));
+        this->shaderProgram->setMatrix4f("rectTrans", GL_FALSE, glm::value_ptr(transform));
     }
     transUpdated = false;
-    this->shaderProgram->use();
+    #ifdef DEBUG
+    GLenum err = glGetError();
+    if (err != 0) {
+        std::cout << "[GL_ERROR]: " <<  err << "\n";
+    }
+    #endif
 }
 
 void Rectangle::setShader(ShaderProgram* shaderProgram) {
