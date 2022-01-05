@@ -5,3 +5,5 @@
 
 References:
 https://web.engr.oregonstate.edu/~mjb/cs557/Handouts/compute.shader.1pp.pdf
+http://www.neilmendoza.com/glsl-rotation-about-an-arbitrary-axis/
+
