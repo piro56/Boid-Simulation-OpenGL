@@ -29,13 +29,13 @@ void process_input(GLFWwindow *window);
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 int main() {
-    std::cout << "Compile Time: " << __TIME__ << "\n";
+    std::cout << "Compiled At: " << __TIME__ << "\n";
     srand(time(NULL));  // initialize random
     // Initialize and configure GLFW -> Set the version &
     // set profile to CORE so we do not get backwards-compatible features.
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
 
@@ -70,10 +70,11 @@ int main() {
     shp::Rectangle r = shp::Rectangle(0.001f, 0.001f, rectangleShader);
     t.setColor(0.5, 0.2, 0.2);
     RectangleStack rs = RectangleStack(2, rectStackShader);
-    rs.initialize(0.02, 0.02);
+    rs.initialize(0.1, 0.1);
     //rs.randomizeLocations();
 
     std::cout << "Drawing\n";
+    GLenum old_err = GL_NO_ERROR;
     while(!glfwWindowShouldClose(window))
     {
         process_input(window);
@@ -85,6 +86,13 @@ int main() {
         rs.setPosition(0, cos(time)/2, sin(time)/2, 0.0f);
         rs.setPosition(1, sin(time)/2, cos(time)/2, 0.0f);
         rs.draw();
+        #ifdef DEBUG
+        GLenum err = glGetError();
+        if (err != old_err && err != GL_NO_ERROR) {
+            std::cout << "[DEBUG] GL Error: " << err << "\n";
+            old_err = err;
+        }
+        #endif
         glfwSwapBuffers(window);
         // Polls events like keyboard/mouse inputs.
         glfwPollEvents();

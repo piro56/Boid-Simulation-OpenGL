@@ -13,10 +13,11 @@
 #include <array>
 #include <random>
 #include <math.h>
-struct Transformation {
-    float[16] trans_matrix;
-}
-
+struct TransformData {
+    float xyz_offset[3];
+    float scaleXYZ[3];
+    float rotation;
+};
 class RectangleStack {
 private:
     VertexArray vao;       
@@ -28,11 +29,12 @@ private:
     VertexBuffer posBuf;
     // ssbo
     VertexBuffer tranSSbuf;
+    VertexBuffer transformSSB;
     ShaderProgram* sp;
     float* positions;   // [x, y, z]
     float* vertices;    // [6 XYZ coords, 18 floats total per rect]
     float* colors;
-    float* trans;       // [16 floats per rect]
+    TransformData* trans_data;
     float xWid;
     float yLen;
     int num_rect;

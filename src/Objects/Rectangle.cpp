@@ -47,17 +47,10 @@ void Rectangle::initializePoints() {
     float colors[12] = {
         r, g, b, r, g, b, r, g, b, r, g, b
     };
-    for (int i = 0; i < 12; i++) {
-        this->vertices[i] = vertices[i];
-        std::cout << "Vertice " << i << ": " << vertices[i] << "\n";
-        this->colors[i] = colors[i];
-    }
+
     //    float indices[6] = {3, 0, 1, 3, 2, 0};
     this->vao.bind();
     this->vbo.bind();
-    for (int i : indices) {
-        std::cout << "Indice: " << i << "\n";
-    }
     this->vbo.setBufferData(sizeof(this->vertices), this->vertices, GL_STATIC_DRAW);    
     this->veb.bind();
     this->veb.setData(sizeof(indices), indices, GL_DYNAMIC_DRAW);

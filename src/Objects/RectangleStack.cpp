@@ -7,15 +7,16 @@ RectangleStack::RectangleStack(int num_rect, ShaderProgram* sp) {
     this->vertices = new float[points_size];
     this->colors = new float[points_size];
     this->positions = new float[points_size];
-    this->trans = new float[num_rect * 16];
+    this->trans_data = new TransformData[num_rect];
     this->vao.bind();
 
 }
 
 RectangleStack::~RectangleStack() {
-    delete vertices;
-    delete colors;
-    delete positions;
+    delete[] vertices;
+    delete[] colors;
+    delete[] positions;
+    delete[] trans_data;
 }
 
 void RectangleStack::draw() {
@@ -23,18 +24,25 @@ void RectangleStack::draw() {
     this->vao.bind();
     verticesBuf.bind();
     verticesBuf.setBufferData(GL_ARRAY_BUFFER, points_size * sizeof(float), this->vertices, GL_STATIC_DRAW);
-
+    verticesBuf.unbind();
     colorBuf.bind();
     colorBuf.setBufferData(GL_ARRAY_BUFFER, points_size * sizeof(float), NULL, GL_DYNAMIC_DRAW);
     glBufferSubData(GL_ARRAY_BUFFER, 0,  points_size * sizeof(float), this->colors);
+    colorBuf.unbind();
     posBuf.bind();
     posBuf.setBufferData(GL_ARRAY_BUFFER, points_size * sizeof(float), NULL, GL_STREAM_DRAW);
     glBufferSubData(GL_ARRAY_BUFFER, 0, points_size * sizeof(float), this->positions);
 
     // transformation update
+    this->transformSSB.bind(GL_SHADER_STORAGE_BUFFER);
+    // buffer orphan
+    this->transformSSB.setBufferData(GL_SHADER_STORAGE_BUFFER, num_rect * sizeof(TransformData), NULL, GL_DYNAMIC_DRAW);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, num_rect * sizeof(TransformData), this->trans_data);
+    // unbind
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-
-    glDrawArrays(GL_TRIANGLES, 0, 6 * num_rect);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 6 * num_rect, 1);
+    //glDrawArrays(GL_TRIANGLES, 0, 6 * num_rect);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -64,11 +72,15 @@ void RectangleStack::initialize(float xWidth, float yLength) {
         float r = norm_randf();
         float g = norm_randf();
         float b = norm_randf();
-        glm::mat4 idenmtx = glm::mat4(1.0f);
-
-        // im scared what is this memory copying jarble i am doing D:
-        // SHOULD copy matrix data kinda like float[16] into trans... hopefully.
-        std::memcpy(&trans[i * 16], glm::value_ptr(idenmtx), sizeof(glm::value_ptr(idenmtx)));
+        // load in transformation data
+        trans_data[i] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.0f};
+        
+        /* OLD 
+        / SHOULD copy matrix data kinda like float[16] into trans... hopefully.
+        / glm::mat4 idenmtx = glm::mat4(1.0f);
+        / 
+        / std::memcpy(&trans[i * 16], glm::value_ptr(idenmtx), 16 * sizeof(float));
+        */
         for (int j = 0; j < 6; j++) {
             this->vertices[i*18 + j*3] = initVert[(i*18 + j*3) % 18];
             this->vertices[i*18 + j*3 + 1] = initVert[(i*18 + j*3 + 1) % 18];
@@ -76,7 +88,6 @@ void RectangleStack::initialize(float xWidth, float yLength) {
             this->positions[i*18 + j*3] = 0.0f;
             this->positions[i*18 + j*3 + 1] = 0.0f;
             this->positions[i*18 + j*3 + 2] = 0.0f;
-
             this->colors[i*18 + j*3] = r;
             this->colors[i*18 + j*3 + 1] = g;
             this->colors[i*18 + j*3 + 2] = b;
@@ -88,20 +99,26 @@ void RectangleStack::initialize(float xWidth, float yLength) {
     verticesBuf.bind();
     this->verticesBuf.setVertexAttributePointer(0, 3, GL_FLOAT, 3 * sizeof(float));
     this->verticesBuf.enableAttribArray(0);
-
+    verticesBuf.unbind();
     this->colorBuf.bind();
     this->colorBuf.setVertexAttributePointer(1, 3, GL_FLOAT, 3 * sizeof(float));
     this->colorBuf.enableAttribArray(1);
-
+    colorBuf.unbind();
     this->posBuf.bind();
     posBuf.setVertexAttributePointer(2, 3, GL_FLOAT, 3 * sizeof(float));
     posBuf.enableAttribArray(2);
+    posBuf.unbind();
+    // OLD, passed matrix to GPU
+    // this->tranSSbuf.bind(GL_SHADER_STORAGE_BUFFER);
+    // this->tranSSbuf.setBufferData(GL_SHADER_STORAGE_BUFFER, 16 * sizeof(float) * num_rect, this->trans, GL_DYNAMIC_DRAW);
+    // glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, tranSSbuf.getBuffer());
+    // glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-    // shader storage buffer
-    this->tranSSbuf.bind(GL_SHADER_STORAGE_BUFFER);
-    this->tranSSbuf.setBufferData(GL_SHADER_STORAGE_BUFFER, 16 * sizeof(float), this->trans, GL_DYNAMIC_COPY);
-
-
+    this->transformSSB.bind(GL_SHADER_STORAGE_BUFFER);
+    this->transformSSB.setBufferData(GL_SHADER_STORAGE_BUFFER, num_rect * sizeof(TransformData), 
+    this->trans_data, GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, transformSSB.getBuffer());
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
 
 
@@ -119,11 +136,9 @@ void RectangleStack::randomizeLocations() {
     }
 }
 void RectangleStack::setPosition(int rect_idx, float x, float y, float z) {
-    for (int i = 0; i < 6; i++) {
-        positions[18*rect_idx + i * 3] = x;
-        positions[18*rect_idx  + i * 3 + 1] = y;
-        positions[18*rect_idx  + i * 3 + 2] = z;
-    }
+    this->trans_data[rect_idx].xyz_offset[0] = x;
+    this->trans_data[rect_idx].xyz_offset[1] = y;
+    this->trans_data[rect_idx].xyz_offset[2] = z;
 }
 void RectangleStack::setColor(int rect_idx, float r, float g, float b) {
     int offset = 18 * rect_idx;
