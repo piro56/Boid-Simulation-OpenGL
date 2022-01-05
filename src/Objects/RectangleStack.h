@@ -14,7 +14,7 @@
 #include <random>
 #include <math.h>
 struct TransformData {
-    float xyz_offset[3];
+    float xyz_offset[4];
     float scaleXYZ[3];
     float rotation;
 };
@@ -49,6 +49,9 @@ public:
     float norm_randf() {return float(rand()) / float(RAND_MAX);}
     float neg_randf() {return float(rand()) / float(RAND_MAX) * 2 - 1;}
     void randomizeLocations();
+    void setRotations();
     void setColor(int rect_idx, float r, float g, float b);
     void setPosition(int rect_idx, float x, float y, float z);
+    void setRotation(int rect_idx, float angle_radians);
+    
 };

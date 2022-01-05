@@ -69,8 +69,8 @@ int main() {
     Triangle t = Triangle(0.5, 0.5, triangleShader);
     shp::Rectangle r = shp::Rectangle(0.001f, 0.001f, rectangleShader);
     t.setColor(0.5, 0.2, 0.2);
-    RectangleStack rs = RectangleStack(2, rectStackShader);
-    rs.initialize(0.1, 0.1);
+    RectangleStack rs = RectangleStack(5000, rectStackShader);
+    rs.initialize(0.01, 0.01);
     //rs.randomizeLocations();
 
     std::cout << "Drawing\n";
@@ -83,9 +83,17 @@ int main() {
         float time = glfwGetTime();
         r.setRotation(cos(time) * 10);
         r.setPosition(r.getX(), sin(time)/2);
-        rs.setPosition(0, cos(time)/2, sin(time)/2, 0.0f);
-        rs.setPosition(1, sin(time)/2, cos(time)/2, 0.0f);
+        // rs.setPosition(0, cos(time)/2, sin(time)/2, 0.0f);
+        // rs.setPosition(1, sin(time)/2, cos(time)/2, 0.0f);
+        // rs.setPosition(0, 0.5, 0.5, 1.0);
+        // rs.setPosition(1, -0.5, -0.5, 1.0);
+        // rs.setRotation(0, cos(time)/2);
+        // rs.setRotation(1, cos(time)/2);
         rs.draw();
+        for (int i = 0; i < 5000; i++) {
+            rs.setPosition(i, cos(time) * i / 5000.0f, sin(time) * i / 5000.0f, 1.0f);
+            rs.setRotation(i, cos(time + i * 1.0f));
+        }
         #ifdef DEBUG
         GLenum err = glGetError();
         if (err != old_err && err != GL_NO_ERROR) {

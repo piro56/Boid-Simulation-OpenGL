@@ -73,7 +73,7 @@ void RectangleStack::initialize(float xWidth, float yLength) {
         float g = norm_randf();
         float b = norm_randf();
         // load in transformation data
-        trans_data[i] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.0f};
+        trans_data[i] = {{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, 0.0f};
         
         /* OLD 
         / SHOULD copy matrix data kinda like float[16] into trans... hopefully.
@@ -129,10 +129,7 @@ void RectangleStack::randomizeLocations() {
     for (int i = 0; i < num_rect; i++) {
         float xOff = neg_randf();
         float yOff = neg_randf();
-        for (int j = 0; j < 6; j++) {
-            positions[18*i + j * 3] = xOff;
-            positions[18*i + j * 3 + 1] = yOff;
-        }
+        setPosition(i, xOff, yOff, 0.0f);
     }
 }
 void RectangleStack::setPosition(int rect_idx, float x, float y, float z) {
@@ -147,4 +144,8 @@ void RectangleStack::setColor(int rect_idx, float r, float g, float b) {
         colors[offset + i * 3 + 1] = g;
         colors[offset + i * 3 + 2] = b;
     }
+}
+
+void RectangleStack::setRotation(int rect_idx, float angle_radians) {
+    this->trans_data[rect_idx].rotation = angle_radians;
 }
