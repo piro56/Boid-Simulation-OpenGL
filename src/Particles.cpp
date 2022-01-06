@@ -21,13 +21,14 @@
 #include "Triangle.h"
 #include "ShaderManager.h"
 #include <RectangleStack.h>
+#include <TriangleStack.h>
 using namespace shp;
 #define DEBUG 1
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow *window);
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 1920;
+const int SCREEN_HEIGHT = 1080;
 int main() {
     std::cout << "Compiled At: " << __TIME__ << "\n";
     srand(time(NULL));  // initialize random
@@ -37,7 +38,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", NULL, NULL);
 
     if (window == NULL)
     {
@@ -61,39 +62,30 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     ShaderManager shaderManager;
     shaderManager.load_shader("rectangle");
-    shaderManager.load_shader("rectstack");
+    shaderManager.load_shader("rectstack");    
+    shaderManager.load_shader("tristack");
     shaderManager.load_shader("triangle");
     ShaderProgram* triangleShader = shaderManager.getShader("triangle");
     ShaderProgram* rectangleShader =  shaderManager.getShader("rectangle");
     ShaderProgram* rectStackShader =  shaderManager.getShader("rectstack");
-    Triangle t = Triangle(0.5, 0.5, triangleShader);
-    shp::Rectangle r = shp::Rectangle(0.001f, 0.001f, rectangleShader);
-    t.setColor(0.5, 0.2, 0.2);
-    RectangleStack rs = RectangleStack(5000, rectStackShader);
-    rs.initialize(0.01, 0.01);
-    //rs.randomizeLocations();
-
+    ShaderProgram* triStackShader =  shaderManager.getShader("tristack");
+    //RectangleStack rs = RectangleStack(10000, rectStackShader);
+    TriangleStack rs = TriangleStack(5, triStackShader);
+    rs.initialize(0.1, 0.1);
+    rs.randomizeLocations();
     std::cout << "Drawing\n";
     GLenum old_err = GL_NO_ERROR;
+    float rot = 0;
     while(!glfwWindowShouldClose(window))
     {
         process_input(window);
-        glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         float time = glfwGetTime();
-        r.setRotation(cos(time) * 10);
-        r.setPosition(r.getX(), sin(time)/2);
-        // rs.setPosition(0, cos(time)/2, sin(time)/2, 0.0f);
-        // rs.setPosition(1, sin(time)/2, cos(time)/2, 0.0f);
-        // rs.setPosition(0, 0.5, 0.5, 1.0);
-        // rs.setPosition(1, -0.5, -0.5, 1.0);
-        // rs.setRotation(0, cos(time)/2);
-        // rs.setRotation(1, cos(time)/2);
         rs.draw();
-        for (int i = 0; i < 5000; i++) {
-            rs.setPosition(i, cos(time) * i / 5000.0f, sin(time) * i / 5000.0f, 1.0f);
-            rs.setRotation(i, cos(time + i * 1.0f));
-        }
+        rot += 0.1f;
+        if (rot > 5.0f) rot = 0;
+
         #ifdef DEBUG
         GLenum err = glGetError();
         if (err != old_err && err != GL_NO_ERROR) {
@@ -101,6 +93,7 @@ int main() {
             old_err = err;
         }
         #endif
+        
         glfwSwapBuffers(window);
         // Polls events like keyboard/mouse inputs.
         glfwPollEvents();

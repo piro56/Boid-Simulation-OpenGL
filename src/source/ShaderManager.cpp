@@ -6,15 +6,23 @@ ShaderProgram* ShaderManager::getShader(std::string shadername) {
             return &sp;
         }
     }
+    std::cout << "[WARNING] Shader " << shadername << " was not found\n"; 
     return nullptr;
 }
-
+bool ShaderManager::checkShader(std::string shadername) {
+        for (ShaderProgram& sp : shaders) {
+        if (sp.getName() == shadername) {
+            return true;
+        }
+    }
+    return false;
+}
 void ShaderManager::load_shader(std::string shadername) {
     // check if already loaded
-    if (getShader(shadername) != nullptr) return;
+    if (checkShader(shadername)) return;
     ShaderProgram sp;
-    sp.load(ShaderProgram::get_shader_file("vertex\\" + shadername + ".vs").c_str(),
-            ShaderProgram::get_shader_file("fragment\\" + shadername + ".fs").c_str());
+    sp.load(ShaderProgram::get_shader_file("vertex\\" + shadername + ".glsl").c_str(),
+            ShaderProgram::get_shader_file("fragment\\" + shadername + ".glsl").c_str());
 
     // WARNING: cannot have dynamically allocated members on Shader Program.
     if (sp.isLoaded()) {
