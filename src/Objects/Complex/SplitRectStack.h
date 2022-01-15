@@ -38,7 +38,7 @@ private:
     int points_size;
 
 public:
-    SplitRectStack(int num_shape, ShaderProgram* sp);
+    SplitRectStack(int num_shape, int num_segments, ShaderProgram* sp);
     ~SplitRectStack();
     void draw();
     void initialize(float xWidth, float yLength);
