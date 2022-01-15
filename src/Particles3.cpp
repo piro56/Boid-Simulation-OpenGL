@@ -58,9 +58,17 @@ int main() {
     // When window is resized -> call frambuffer_size_callback.
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     ShaderManager shaderManager;
-
-
-
+    int num_particles;
+    VertexBuffer pSSBO, vSSBO, cSSBO;
+    float *pos = new float[num_particles * 4];
+    float *vel = new float[num_particles * 4];
+    float *col = new float[num_particles * 4];
+    pSSBO.bind(GL_SHADER_STORAGE_BUFFER);
+    pSSBO.setBufferData(GL_SHADER_STORAGE_BUFFER, pos, GL_DYNAMIC_DRAW);
+    // TODO ADD OTHER BINDS
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, pSSBO.getBuffer());
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, vSSBO.getBuffer());
+    glBinderBufferBase(GL_SHADER_STORAGE_BUFFER, 5, cSSBO.getBuffer());
 
     while(!glfwWindowShouldClose(window))
     {
@@ -74,6 +82,9 @@ int main() {
         // Polls events like keyboard/mouse inputs.
         glfwPollEvents();
     }
+    delete[] pos;
+    delete[] vel;
+    delete[] col;
 }
 
 void process_input(GLFWwindow *window)

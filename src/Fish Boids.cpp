@@ -101,7 +101,7 @@ int main() {
     ShaderManager shaderManager;
     shaderManager.load_shader("fish");
     ShaderProgram* sp = shaderManager.getShader("fish");
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 2000; i++) {
         triangles.push_back(new Fish (0.005, 0.01, &triangles, fs, sp));
         triangles[i]->setColor(200 / 255.0f, 20.0f/255.0f, 20.0f/255.0f);
 
@@ -146,6 +146,7 @@ int main() {
         {
             // simple slider window
             ImGui::Begin("BOID Settings");
+            ImGui::LabelText("FPS", "");
             ImGui::SliderFloat("Avoidance Distance", &avoidance_dist_mult, 0.001f, 5.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
             ImGui::SliderFloat("Size", &fs.SIZE, 0.01f, 10.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
             ImGui::SliderFloat("Avoidance Strength", &avoidance_turn_mult, 0.01f, 5.0f, "%.4f", ImGuiSliderFlags_Logarithmic);

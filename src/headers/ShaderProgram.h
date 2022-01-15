@@ -27,6 +27,7 @@ public:
     void use();
     void load(const char* vertexPath, const char* fragPath);
     void load(const char* srcPath);
+    void loadCompute(const char* compute_name);
     void setBool(const std::string &name, bool value) const;
     void setInt(const std::string &name, int value) const;
     void setFloat(const std::string &name, float value) const;
@@ -38,6 +39,7 @@ public:
         char result[ MAX_PATH ];
         return std::string( result, GetModuleFileName( NULL, result, MAX_PATH ) );
     }
+    
     std::string getName() { return shaderName; }
     void setName(std::string name) { shaderName = name; }
     ShaderProgram(std::string vertexShaderPath, std::string fragShaderPath);

@@ -218,3 +218,7 @@ std::string ShaderProgram::get_shader_file(std::string fileName) {
     //std::cout << "OUTPUT S:" << s << "\n\n";
     return s;
 }
+
+void ShaderProgram::loadCompute(const char* path) {
+
+}

@@ -73,6 +73,8 @@ int main() {
     TriangleStack rs = TriangleStack(5, triStackShader);
     rs.initialize(0.1, 0.1);
     rs.randomizeLocations();
+    // TODO: parallel sort
+    
     std::cout << "Drawing\n";
     GLenum old_err = GL_NO_ERROR;
     float rot = 0;
