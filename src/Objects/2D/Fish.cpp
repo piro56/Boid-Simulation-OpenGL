@@ -68,7 +68,20 @@ void Fish::draw() {
     //setColor(0.2, 0.0, 0.6);
     this->scale(FISH_SETTINGS->SIZE, FISH_SETTINGS->SIZE, 1.0f);
     setColor(absX * 30 + dx * dy + 0.5, absX * absY + x, absY * 30 + y);
-    Triangle::draw();
+    // if (tex != nullptr) {
+    //     std::cout << "Enabling texture..\n";
+    //     tex->bindEnable();
+    // }
+    if (transUpdated) {
+    transform = glm::mat4(1.0f);
+    transform = glm::translate(transform, glm::vec3(x, y, 0.0f));
+    transform = glm::rotate(transform, rotation, glm::vec3(0.0,0.0,1.0));
+    transform = glm::scale(transform, glm::vec3(scaleX, scaleY, scaleZ));
+    this->shaderProgram->setMatrix4f("transform", GL_FALSE, glm::value_ptr(transform));
+    }
+    transUpdated = false;
+    vao.bind();
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 void Fish::processMovement() {

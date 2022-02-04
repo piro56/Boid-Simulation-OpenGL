@@ -101,7 +101,7 @@ int main() {
     ShaderManager shaderManager;
     shaderManager.load_shader("fish");
     ShaderProgram* sp = shaderManager.getShader("fish");
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 2000; i++) {
         triangles.push_back(new Fish (0.005, 0.01, &triangles, fs, sp));
         triangles[i]->setColor(200 / 255.0f, 20.0f/255.0f, 20.0f/255.0f);
 
@@ -131,7 +131,7 @@ int main() {
     float speed_mult = 1.0f;
     float avoidance_turn_mult = 1.0f;
     while (!glfwWindowShouldClose(window))
-    {
+    {   
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         float timeValue = glfwGetTime();
@@ -155,6 +155,7 @@ int main() {
         float offOne = (sin(timeValue)) / 2.0f;
         float offTwo = (cos(timeValue)) / 2.0f;
         int counter = 0;
+        sp->use();
         for (Fish* t : triangles) {
             //t->processMovement();
             //t->setPosition(t->getX() + (rand() % 3 - 1) * rand() % 200 / 20000.0f, t->getY() + (rand() % 3 - 1) * rand() % 200 / 20000.0f);
