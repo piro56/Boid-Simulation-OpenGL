@@ -146,6 +146,7 @@ int main() {
         {
             // simple slider window
             ImGui::Begin("BOID Settings");
+            ImGui::LabelText("FPS", "");
             ImGui::SliderFloat("Avoidance Distance", &avoidance_dist_mult, 0.001f, 5.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
             ImGui::SliderFloat("Size", &fs.SIZE, 0.01f, 10.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
             ImGui::SliderFloat("Avoidance Strength", &avoidance_turn_mult, 0.01f, 5.0f, "%.4f", ImGuiSliderFlags_Logarithmic);

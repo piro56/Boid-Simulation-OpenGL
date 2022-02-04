@@ -30,6 +30,8 @@ void ShaderManager::load_shader(std::string shadername) {
         this->shaders.push_back(sp);
         }
 }
+void ShaderManager::load_compute_shader(std::string shadername) {
 
+}
 ShaderManager::ShaderManager() {
 }

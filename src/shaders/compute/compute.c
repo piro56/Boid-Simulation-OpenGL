@@ -30,6 +30,8 @@ layout( std430, binding=6 ) buffer Col
 vec4 Colors[ ]; // array of structures
 };
 
+// WHAT does this do?
+// defines our local size                                                                                                                                                       
 layout( local_size_x = 128, local_size_y = 1, local_size_z = 1 ) in;
 
 vec3 Bounce( vec3 vin, vec3 n ) {

@@ -10,6 +10,7 @@ public:
     bool checkShader(std::string shadername);
 
     void load_shader(std::string shadername);
+    void load_compute_shader(std::string shadername);
     //bool unload_shader(std::string shadername);
     ShaderManager();
 };

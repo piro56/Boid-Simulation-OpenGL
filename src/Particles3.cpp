@@ -23,7 +23,9 @@
 using namespace shp;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow *window);
-
+float neg_randf();
+float norm_randf();
+void fillRand(float* arr, int size, bool neg = true, float modifier = 1.0f);
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 int main() {
@@ -58,10 +60,44 @@ int main() {
     // When window is resized -> call frambuffer_size_callback.
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     ShaderManager shaderManager;
+    
+    int num_particles = 128;
+    
+    VertexBuffer pSSBO, vSSBO, cSSBO;
+    
+    float *pos = new float[num_particles * 4];
+    float *vel = new float[num_particles * 4];
+    float *col = new float[num_particles * 4];
+    
+    fillRand(pos, num_particles * 4, true, 1.0f);
+    fillRand(vel, num_particles * 4, true, 0.2f);
+    fillRand(col, num_particles * 4, false, 1.0f);
 
+    pSSBO.bind(GL_SHADER_STORAGE_BUFFER);
+    pSSBO.setBufferData(GL_SHADER_STORAGE_BUFFER, 
+    num_particles * 4 * sizeof(float), pos, GL_DYNAMIC_DRAW);
 
+    vSSBO.bind();
+    vSSBO.setBufferData(GL_SHADER_STORAGE_BUFFER, 
+    num_particles * 4 * sizeof(float), vel, GL_DYNAMIC_DRAW);
 
+    cSSBO.bind();
+    cSSBO.setBufferData(GL_SHADER_STORAGE_BUFFER, 
+    num_particles * 4 * sizeof(float), col, GL_DYNAMIC_DRAW);
+    
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, pSSBO.getBuffer());
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, vSSBO.getBuffer());
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, cSSBO.getBuffer());
 
+    ShaderProgram computeShader = 
+    ShaderProgram(ShaderProgram::get_shader_file("compute\\computetest.glsl"));
+    computeShader.use();
+    // TODO: Fix dispatch compute
+    glDispatchCompute(num_particles / 128, 1, 1);
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+    
+    // TODO: Read back positions to see if compute shader succeeeded
+    //float* d = glMapBufferRange(pSSBO.getBuffer(), 0, 4 * sizeof(float), GL_MAP_READ_BIT);
     while(!glfwWindowShouldClose(window))
     {
         process_input(window);
@@ -74,6 +110,9 @@ int main() {
         // Polls events like keyboard/mouse inputs.
         glfwPollEvents();
     }
+    delete[] pos;
+    delete[] vel;
+    delete[] col;
 }
 
 void process_input(GLFWwindow *window)
@@ -88,4 +127,23 @@ void process_input(GLFWwindow *window)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+// -1 to 1
+float neg_randf() {
+    return float(rand()) / float(RAND_MAX) * 2 - 1;
+}
+// 0 to 1
+float norm_randf() {
+    return float(rand()) / float(RAND_MAX);
+}
+
+void fillRand(float* arr, int size, bool neg, float modifier) {
+    for (int i = 0; i < size; i++) {
+        if (neg) {
+            arr[i] = neg_randf();
+        } else {
+            arr[i] = norm_randf();
+        }
+    }
 }
