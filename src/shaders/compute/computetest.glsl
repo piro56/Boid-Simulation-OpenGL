@@ -6,6 +6,10 @@
 // X, Y, Z
 // Vx, Vy, Vz
 // 
+
+// specify work group size
+layout( local_size_x = 128, local_size_y = 1, local_size_z = 1 ) in;
+
 layout( std430, binding=3 ) buffer Pos {
     vec4 Positions[];
 };
@@ -17,13 +21,9 @@ layout(std430, binding=5) buffer Col {
     vec4 Colors[];  // RGB (then maybe shadow)
 };
 
-
-// specify work group size
-layout( local_size_x = 128, local_size_y = 1, local_size_z = 1 ) in;
-
-
 void main() {
-    Positions[gl_GlobalInvocationID.x].x = 0.0f; 
+    float px = -0.2 + (gl_GlobalInvocationID.x / 1000.0f);
+    Positions[gl_GlobalInvocationID.x] = vec4(px, 0.5, 0.2, 1.0); 
     // uint gid = gl_GlobalInvocationID.x;
     // vec4 pos = Positions[gid];
     // pos.xyz += Velocities[gid].xyz;

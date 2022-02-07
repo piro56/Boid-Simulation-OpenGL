@@ -34,8 +34,8 @@ int main() {
     // Initialize and configure GLFW -> Set the version &
     // set profile to CORE so we do not get backwards-compatible features.
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
 
@@ -54,7 +54,7 @@ int main() {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-
+    
     // Window dimensions
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     // When window is resized -> call frambuffer_size_callback.
@@ -91,17 +91,52 @@ int main() {
 
     ShaderProgram computeShader = 
     ShaderProgram(ShaderProgram::get_shader_file("compute\\computetest.glsl"));
+
     computeShader.use();
-    // TODO: Fix dispatch compute
     glDispatchCompute(num_particles / 128, 1, 1);
-    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+    glMemoryBarrier(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
     
     // TODO: Read back positions to see if compute shader succeeeded
-    //float* d = glMapBufferRange(pSSBO.getBuffer(), 0, 4 * sizeof(float), GL_MAP_READ_BIT);
+    pSSBO.bind();
+    float* posdata = (float*) glMapNamedBuffer(pSSBO.getBuffer(), GL_READ_ONLY);
+    GLenum err = glGetError();
+    if (err != GL_NO_ERROR) {
+        std::cout << "Error: " << err << "\n";
+    }
+
+    // unmap buffer
+    std::cout << "pos 0: " << posdata[0] << posdata[1] << posdata[2] << posdata[3] << "\n";
+    bool result = glUnmapNamedBuffer(pSSBO.getBuffer());
+    if (result == GL_FALSE) {
+        std::cout << "bad buffer!\n";
+    }
+    shaderManager.load_shader("particle");
+    ShaderProgram* draw_shader = shaderManager.getShader("particle");
+    glEnable(GL_PROGRAM_POINT_SIZE);
+    
     while(!glfwWindowShouldClose(window))
     {
+        //compute
+        // computeShader.use();
+        // glDispatchCompute(num_particles / 128, 1, 1);
+        // glMemoryBarrier(GL_ALL_BARRIER_BITS);
+        if (err != GL_NO_ERROR) {
+        std::cout << "Error: " << err << "\n";
+        }
+        
+        //draw
+        draw_shader->use();
+        glBindBuffer( GL_ARRAY_BUFFER, pSSBO.getBuffer() );
+        glVertexAttribPointer(0, 3 * num_particles, GL_FLOAT, GL_FALSE, 
+                              4 * sizeof(float), (void*) 0);
+        glEnableClientState( GL_ARRAY_BUFFER );
+
+        glDrawArrays(GL_POINTS, 0, num_particles);
+        if (err != GL_NO_ERROR) {
+            std::cout << "Error: " << err << "\n";
+        }
         process_input(window);
-        glClearColor(0.2f, 0.2f, 0.4f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         float time = glfwGetTime();
 

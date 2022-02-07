@@ -145,6 +145,7 @@ void ShaderProgram::load(const char* vertexPath, const char* fragPath) {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 }
+// LOADS COMPUTE SHADER
 void ShaderProgram::load(const char* srcPath) {
     unsigned int srcShader;
     std::string srcCode;
