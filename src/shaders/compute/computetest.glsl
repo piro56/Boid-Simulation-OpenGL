@@ -22,8 +22,7 @@ layout(std430, binding=5) buffer Col {
 };
 
 void main() {
-    float px = -0.2 + (gl_GlobalInvocationID.x / 1000.0f);
-    Positions[gl_GlobalInvocationID.x] = vec4(px, 0.5, 0.2, 1.0); 
+    Positions[gl_GlobalInvocationID.x].xy += Velocities[gl_GlobalInvocationID.x].xy
     // uint gid = gl_GlobalInvocationID.x;
     // vec4 pos = Positions[gid];
     // pos.xyz += Velocities[gid].xyz;

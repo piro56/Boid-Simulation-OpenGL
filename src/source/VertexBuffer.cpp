@@ -1,12 +1,15 @@
 #include "VertexBuffer.h"
 
 
+
 void VertexBuffer::unbind() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 void VertexBuffer::bind(GLenum target) {
     glBindBuffer(target, this->VBO);
 }
+
+
 void VertexBuffer::bind() {
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 
@@ -45,6 +48,9 @@ void VertexBuffer::setVertexAttributePointer(GLuint index, GLint size, float typ
 void VertexBuffer::enableAttribArray(unsigned int location) {
     glEnableVertexAttribArray(location);
 }
+
+
+
 VertexBuffer::VertexBuffer() {
     glGenBuffers(1, &this->VBO);
 }

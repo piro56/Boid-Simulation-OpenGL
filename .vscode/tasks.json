@@ -20,6 +20,7 @@
 				// Include .cpp files here (These are for .h file code)
 				"${workspaceRoot}/src/source/VertexArray.cpp",
 				"${workspaceRoot}/src/source/VertexBuffer.cpp",
+				"${workspaceRoot}/src/source/GLBuffer.cpp",
 				"${workspaceRoot}/src/source/ShaderProgram.cpp",
 				"${workspaceRoot}/src/source/stb_image.cpp",
 				"${workspaceRoot}/src/source/ElementBuffer.cpp",

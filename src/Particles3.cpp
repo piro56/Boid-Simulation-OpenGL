@@ -120,6 +120,7 @@ int main() {
         // computeShader.use();
         // glDispatchCompute(num_particles / 128, 1, 1);
         // glMemoryBarrier(GL_ALL_BARRIER_BITS);
+        err = glGetError();
         if (err != GL_NO_ERROR) {
         std::cout << "Error: " << err << "\n";
         }
