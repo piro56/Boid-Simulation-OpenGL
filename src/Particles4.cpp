@@ -2,11 +2,11 @@
 #include <glad/glad.h>  // Manages function pointers
 #include <glfw3.h>      // Manages window
 
-#include <glm/glm.hpp>  // matrix math
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <math.h>
-#include <cstdlib>
+// #include <glm/glm.hpp>  // matrix math
+// #include <glm/gtc/matrix_transform.hpp>
+// #include <glm/gtc/type_ptr.hpp>
+// #include <math.h>
+// #include <cstdlib>
 #include <vector>
 #include <random>
 #include <time.h>
@@ -28,7 +28,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow *window);
 float neg_randf();
 float norm_randf();
-void fillRand(float* arr, int size, bool neg = true);
+void fillRand(float* arr, int size, bool neg = true, float multiplier = 1.0f);
 void gl_check_error();
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -73,28 +73,20 @@ int main() {
     GLBuffer cSSBO = GLBuffer(GL_SHADER_STORAGE_BUFFER);
     GLBuffer regVBO = GLBuffer(GL_ARRAY_BUFFER);
     VertexArray vao;
-    int num_points = 3;
+    int num_points = 1048576;
     int num_floats = num_points * 4;
-    
-    float pos[12] = {
-        -0.5f, -0.5f, 0.0f, 1.0f,
-        0.5f, -0.5f, 0.0f, 1.0f,
-        0.0f,  0.5f, 0.0f, 1.0f
-    };
-    float pos2[12] = {
-        -0.5f, -0.5f, 0.0f, 1.0f,
-        0.5f, -0.5f, 0.0f, 1.0f,
-        0.0f,  0.5f, 0.0f, 1.0f
-    };
+
+    float *pos = new float[num_floats];
     float *vel = new float[num_floats]; // x y pad pad
     float *col = new float[num_floats]; // r g b pad
 
-    fillRand(vel, num_floats, true);
+    fillRand(pos, num_floats, true);
+    fillRand(vel, num_floats, true, 0.001);
     fillRand(col, num_floats, false);
 
     vao.bind();
     pSSBO.bind();
-    pSSBO.setBufferData(num_floats * sizeof(float), pos2, GL_DYNAMIC_DRAW);
+    pSSBO.setBufferData(num_floats * sizeof(float), pos, GL_DYNAMIC_DRAW);
     vSSBO.bind();
     vSSBO.setBufferData(num_floats * sizeof(float), vel, GL_DYNAMIC_DRAW);
     cSSBO.bind();
@@ -108,12 +100,12 @@ int main() {
     ShaderProgram computeShader = 
     ShaderProgram(ShaderProgram::get_shader_file("compute\\computetri.glsl"));
     gl_check_error();
-    std::cout << "Pre Compute:\n";
-    computeShader.use();
-    glDispatchCompute(num_floats, 1, 1);
-    glMemoryBarrier(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
-    gl_check_error();
-    std::cout << "Computed\n";
+    // std::cout << "Pre Compute:\n";
+    // computeShader.use();
+    // glDispatchCompute(num_points / 128, 1, 1);
+    // glMemoryBarrier(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
+    // gl_check_error();
+    // std::cout << "Computed\n";
     pSSBO.bind();
 
     // read back data
@@ -132,24 +124,17 @@ int main() {
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
     draw_shader->use();
-    // pSSBO.unbind();
-    //glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, pSSBO.getBuffer());
-    //glBindBuffer( GL_ARRAY_BUFFER, pSSBO.getBuffer());
-
-    //regVBO.bind();
-    //regVBO.setBufferData(sizeof(pos), pos, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, pSSBO.getBuffer());
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 
                           4 * sizeof(float), (void*) 0);  
-
-    
+    glEnable(GL_PROGRAM_POINT_SIZE);
     while(!glfwWindowShouldClose(window)) {
-        // computeShader.use();
-        // glDispatchCompute(num_points / 128, 1, 1);
-        // glMemoryBarrier(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
+        computeShader.use();
+        glDispatchCompute(num_points / 128, 1, 1);
+        glMemoryBarrier(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
         process_input(window);
-        glClearColor(0.1f, 0.1f, 0.6f, 1.0f);
+        glClearColor(0.0f, 0.05f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         draw_shader->use();
@@ -157,12 +142,15 @@ int main() {
         vao.bind();
 
         //draw
-        glDrawArrays(GL_TRIANGLES, 0, 3);   
+        glDrawArrays(GL_POINTS, 0, num_points);   
         
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    delete[] pos;
+    delete[] vel;
+    delete[] col;
 }
 
 
@@ -184,7 +172,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 // -1 to 1
 float neg_randf() {
-    return float(rand()) / float(RAND_MAX) * 2 - 1;
+    float val = ((float(rand()) / float(RAND_MAX)) * 2.0) - 1.0;
+    return val;
 }
 // 0 to 1
 float norm_randf() {
@@ -195,12 +184,12 @@ float norm_randf() {
  * Fills array with random numbers -1 to 1 or 0 to 1
  * neg - whether or not values can be negative
  */
-void fillRand(float* arr, int size, bool neg) {
+void fillRand(float* arr, int size, bool neg, float multiplier) {
     for (int i = 0; i < size; i++) {
         if (neg) {
-            arr[i] = neg_randf();
+            arr[i] = neg_randf() * multiplier;
         } else {
-            arr[i] = norm_randf();
+            arr[i] = norm_randf() * multiplier;
         }
     }
 }

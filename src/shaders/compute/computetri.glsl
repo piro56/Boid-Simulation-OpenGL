@@ -23,7 +23,13 @@ layout(std430, binding=5) buffer Col {
 
 void main() {
     // shift positions by velocity.
-    Positions[gl_GlobalInvocationID.x].xy += 0.1;
+    Positions[gl_GlobalInvocationID.x].xy += Velocities[gl_GlobalInvocationID.x].xy;
+    if (abs(Positions[gl_GlobalInvocationID.x].x) >= 1.0) {
+        Velocities[gl_GlobalInvocationID.x].x = -Velocities[gl_GlobalInvocationID.x].x;
+    }
+    if (abs(Positions[gl_GlobalInvocationID.x].y) >= 1.0) {
+        Velocities[gl_GlobalInvocationID.x].y = -Velocities[gl_GlobalInvocationID.x].y;
+    }
 
 }
 
