@@ -154,6 +154,8 @@ void Triangle::setColor(float r, float g, float b) {
 }
 
 
+
+
 Triangle::~Triangle() {
 }
 

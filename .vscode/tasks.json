@@ -36,7 +36,6 @@
 				"${workspaceRoot}/src/source/Camera.cpp",
 				"${workspaceRoot}/src/projects/dvdbouncer/DVD.cpp",
 				
-				
 				"-g",
 				"--std=c++17",
 				"-I${workspaceRoot}/src/projects/dvdbouncer",	// PROJECT
@@ -51,6 +50,7 @@
 				"-L${workspaceRoot}/dependencies/GLFW/lib-mingw-w64",
 				"-static",
 				"-lglfw3dll",
+				"-O3",
 				"-o",
 				"${workspaceRoot}/builds/windows/${fileBasenameNoExtension}.exe"
 			],
