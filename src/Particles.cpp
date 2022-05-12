@@ -75,6 +75,19 @@ int main() {
     rs.randomizeLocations();
     // TODO: parallel sort
     
+
+
+
+
+
+
+
+
+
+
+
+
+    
     std::cout << "Drawing\n";
     GLenum old_err = GL_NO_ERROR;
     float rot = 0;

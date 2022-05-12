@@ -45,6 +45,16 @@ void TriangleStack::draw() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+/*
+ * Fills vertices with given width and length
+ * Default initializes positions to 0.0f
+ * Also initializes to random colors
+ * Default initializes transformation data
+ * Initalize buffers, and fill them.
+ * 3 vertex Buffers, position, color, translation
+ * 1 shader storage buffer: transformation
+ */
+
 void TriangleStack::initialize(float xWidth, float yLength) {
     float halfX = xWidth / 2.0f;
     float halfY = yLength / 2.0f;
@@ -57,7 +67,9 @@ void TriangleStack::initialize(float xWidth, float yLength) {
         float r = norm_randf();
         float g = norm_randf();
         float b = norm_randf();
+
         // load in transformation data
+        // vec4 position offset, vec3 scale, float rotation
         trans_data[i] = {{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, 0.0f};
         for (int j = 0; j < 9; j++) {
             this->vertices[i*9 + j] = initVert[(i*9 + j) % 9];

@@ -27,6 +27,9 @@ private:
     float* positions;   // [x, y, z]
     float* vertices;    // [6 XYZ coords, 18 floats total per rect]
     float* colors;
+    
+    // vec4 position offset, vec3 scale, float rotation
+    // 8 floats total
     TransformData* trans_data;
     float xWid;
     float yLen;

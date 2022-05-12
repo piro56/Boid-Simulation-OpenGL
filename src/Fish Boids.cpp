@@ -101,7 +101,10 @@ int main() {
     ShaderManager shaderManager;
     shaderManager.load_shader("fish");
     ShaderProgram* sp = shaderManager.getShader("fish");
-    for (int i = 0; i < 2000; i++) {
+    int num_fish = 0;
+    std::cout << "Enter Fish Amount: ";
+    std::cin >> num_fish;
+    for (int i = 0; i < num_fish; i++) {
         triangles.push_back(new Fish (0.005, 0.01, &triangles, fs, sp));
         triangles[i]->setColor(200 / 255.0f, 20.0f/255.0f, 20.0f/255.0f);
 
