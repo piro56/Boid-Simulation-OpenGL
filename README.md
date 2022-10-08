@@ -1,4 +1,4 @@
-# Various Assortment of Small OpenGL-Projects
+# Simulation of Boids alongside a various assortment of other smaller projects.
 
 ### Boid Simulation
 A medium sized project, where I simulate BOIDs. <br/>
@@ -23,3 +23,5 @@ Using matrix transformations and through many really weird looking squares, I ev
 <p align="center">
 <img src="https://user-images.githubusercontent.com/69094266/172071925-e40f48b6-0d4f-42bd-9e1f-021ec373d2cf.gif" width="500" height="400">
 </p>
+
+Reference: https://learnopengl.com/
