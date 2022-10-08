@@ -17,8 +17,8 @@ https://web.engr.oregonstate.edu/~mjb/cs557/Handouts/compute.shader.1pp.pdf
 http://www.neilmendoza.com/glsl-rotation-about-an-arbitrary-axis/
 
 ### 3D Cube
-Using matrix transformations and through many really weird looking squares, I eventually was able to create a cube.
-- 3D World Space == with a moving camera and transformation matrices, I was able to simulate a 3D worldspace.
+Using matrix transformations and through many really weird looking squares, I eventually was able to create cubes!
+- 3D World Space simulated with a moving camera and transformation matrices.
 - Rotating Objects and Transformation Matrices - Using a transformation matrix allowed for easy manipulation of object vertices. <a/>
 <p align="center">
 <img src="https://user-images.githubusercontent.com/69094266/172071925-e40f48b6-0d4f-42bd-9e1f-021ec373d2cf.gif" width="500" height="400">
